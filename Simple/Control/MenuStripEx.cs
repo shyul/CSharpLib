@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 namespace Shyu.UserControl
 {
+    [System.ComponentModel.DesignerCategory("code")]
     public partial class MenuStripEx : System.Windows.Forms.MenuStrip
     {
         public MenuStripEx()

@@ -32,7 +32,10 @@
             this.toolStripEx1 = new Shyu.UserControl.ToolStripEx();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.menuStripEx1 = new Shyu.UserControl.MenuStripEx();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripEx1.SuspendLayout();
+            this.menuStripEx1.SuspendLayout();
             this.SuspendLayout();
             // 
             // toolStripEx1
@@ -57,11 +60,26 @@
             // 
             // menuStripEx1
             // 
+            this.menuStripEx1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.fileToolStripMenuItem,
+            this.editToolStripMenuItem});
             this.menuStripEx1.Location = new System.Drawing.Point(0, 0);
             this.menuStripEx1.Name = "menuStripEx1";
             this.menuStripEx1.Size = new System.Drawing.Size(725, 24);
             this.menuStripEx1.TabIndex = 1;
             this.menuStripEx1.Text = "menuStripEx1";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Text = "File";
+            // 
+            // editToolStripMenuItem
+            // 
+            this.editToolStripMenuItem.Name = "editToolStripMenuItem";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
+            this.editToolStripMenuItem.Text = "Edit";
             // 
             // Form1
             // 
@@ -70,10 +88,13 @@
             this.ClientSize = new System.Drawing.Size(725, 469);
             this.Controls.Add(this.toolStripEx1);
             this.Controls.Add(this.menuStripEx1);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.Text = "Form1";
             this.toolStripEx1.ResumeLayout(false);
             this.toolStripEx1.PerformLayout();
+            this.menuStripEx1.ResumeLayout(false);
+            this.menuStripEx1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -84,6 +105,8 @@
         private UserControl.ToolStripEx toolStripEx1;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
         private UserControl.MenuStripEx menuStripEx1;
+        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem editToolStripMenuItem;
     }
 }
 

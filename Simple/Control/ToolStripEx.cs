@@ -11,6 +11,7 @@ using System.Drawing.Drawing2D;
 
 namespace Shyu.UserControl
 {
+    [System.ComponentModel.DesignerCategory("code")]
     public partial class ToolStripEx : System.Windows.Forms.ToolStrip
     {
         public ToolStripEx()
@@ -25,7 +26,7 @@ namespace Shyu.UserControl
 
         protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
         {
-            e.Graphics.FillRectangle(new SolidBrush(Color.LightGray), e.AffectedBounds);
+            e.Graphics.FillRectangle(new SolidBrush(Color.White), e.AffectedBounds);
         }
     }
 }
