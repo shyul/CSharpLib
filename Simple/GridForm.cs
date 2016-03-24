@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Simple
+namespace Shyu
 {
-    public partial class Form2 : Form
+    public partial class GridForm : Form
     {
-        public Form2()
+        public GridForm()
         {
             InitializeComponent();
         }
