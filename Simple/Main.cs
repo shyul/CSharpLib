@@ -24,16 +24,32 @@ namespace Shyu
 
         private void btnStart_Click(object sender, EventArgs e)
         {
-            DialogFileOpen.DefaultExt = "csv";
-            DialogFileOpen.Filter = "EOD Data Set|*.csv";
-            DialogFileOpen.Title = "Open EOD Data Set";
-            DialogFileOpen.ShowDialog();
-            if (DialogFileOpen.FileName != string.Empty)
+            if (btnStart.Text == "Start")
             {
-                Status.Clear();
-                EOD_File = new FileInfo(DialogFileOpen.FileName);
-                PrintInfo("Load new file " + EOD_File.FullName);
-                LoadDataWorker.RunWorkerAsync();
+                DialogFileOpen.DefaultExt = "csv";
+                DialogFileOpen.Filter = "EOD Data Set|*.csv";
+                DialogFileOpen.Title = "Open EOD Data Set";
+                if (DialogFileOpen.ShowDialog() == DialogResult.OK && DialogFileOpen.FileName != string.Empty)// && DialogFileOpen.DialogResult == DialogResult.OK)
+                {
+                    Status.Clear();
+                    EOD_File = new FileInfo(DialogFileOpen.FileName);
+                    PrintInfo("Load new file " + EOD_File.FullName);
+                    CancelPending = false;
+                    LoadDataWorker.RunWorkerAsync();
+                    btnStart.Text = "Stop";
+                }
+            }
+            else if (btnStart.Text == "Stop")
+            {
+                CancelPending = true;
+                PrintInfo("Cancelled");
+                File.WriteAllText(@"d:\temp.txt", Status.Text);
+                btnStart.Text = "Start";
+            }
+            else
+            {
+                CancelPending = true;
+                btnStart.Text = "Start";
             }
         }
 
@@ -55,6 +71,7 @@ namespace Shyu
         {
             LoadDataWorker.CancelAsync();
             MessageWorker.CancelAsync();
+            
         }
     }
 }

@@ -66,9 +66,9 @@
             // 
             this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.Location = new System.Drawing.Point(93, 12);
+            this.progressBar.Location = new System.Drawing.Point(94, 12);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(359, 23);
+            this.progressBar.Size = new System.Drawing.Size(358, 23);
             this.progressBar.TabIndex = 2;
             // 
             // DialogFileOpen
@@ -86,6 +86,7 @@
             // MessageWorker
             // 
             this.MessageWorker.WorkerReportsProgress = true;
+            this.MessageWorker.WorkerSupportsCancellation = true;
             this.MessageWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.MessageWorker_DoWork);
             this.MessageWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.MessageWorker_ProgressChanged);
             // 

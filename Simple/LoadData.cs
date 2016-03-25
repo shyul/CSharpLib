@@ -20,6 +20,8 @@ namespace Shyu
 
         DataTable EODTable, CalendarTable;
 
+        bool CancelPending = false;
+
         private void GetTables(string SymbolName)
         {
             if (EODTable != null) EODTable.Dispose();
@@ -40,19 +42,25 @@ namespace Shyu
             CalendarTable = new DataTable();
             CalendarTable.TableName = SymbolName;
             CalendarTable.Columns.Add(new DataColumn("EID", typeof(long))); // "BIGINT DEFAULT 0"
-            CalendarTable.Columns.Add(new DataColumn("CID", typeof(string))); // "NTEXT NOT NULL PRIMARY KEY"
+            CalendarTable.Columns.Add(new DataColumn("CID", typeof(string))); // "NTEXT"
             CalendarTable.Columns.Add(new DataColumn("VALUE", typeof(string))); // "NTEXT"
             CalendarTable.Columns.Add(new DataColumn("SOURCE", typeof(char))); // "CHAR"
             CalendarTable.AcceptChanges();
         }
         private void WriteTables()
         {
-            PrintInfo("Writing Table: " + EODTable.TableName + ", Size: " + EODTable.Rows.Count);
-            EODTable.AcceptChanges();
-            string SqlCmd = "CREATE TABLE [dbo].[" + EODTable.TableName + "] ([EID] BIGINT NOT NULL PRIMARY KEY DEFAULT 0, [OPEN] REAL NULL, [LOW] REAL NULL, [HIGH] REAL NULL, [CLOSE] REAL NOT NULL, [VOLUME] BIGINT NOT NULL, [SOURCE] CHAR(1) NOT NULL)";
-            DBUtil.SaveTable(EODFile, EODTable, SqlCmd);
-            SqlCmd = "CREATE TABLE [dbo].[" + EODTable.TableName + "] ([EID] BIGINT NOT NULL, [CID] NTEXT NOT NULL, [VALUE] NTEXT NULL, [SOURCE] CHAR(1) NOT NULL)";
-            DBUtil.SaveTable(CalendarFile, CalendarTable, SqlCmd);
+            //File.WriteAllText(@"d:\"+ EODTable.TableName + ".csv", CsvString);
+            //CsvString = string.Empty;
+            if (!EODTable.TableName.Contains('_'))
+            {
+                SymbolNames += EODTable.TableName + "\n";
+                PrintInfo("Writing Table: " + EODTable.TableName + ", Size: " + EODTable.Rows.Count);
+                EODTable.AcceptChanges();
+                string SqlCmd = "CREATE TABLE [dbo].[" + EODTable.TableName + "] ([EID] BIGINT NOT NULL PRIMARY KEY DEFAULT 0, [OPEN] REAL NULL, [LOW] REAL NULL, [HIGH] REAL NULL, [CLOSE] REAL NOT NULL, [VOLUME] BIGINT NOT NULL, [SOURCE] CHAR(1) NOT NULL)";
+                DBUtil.SaveTable(EODFile, EODTable, SqlCmd);
+                SqlCmd = "CREATE TABLE [dbo].[" + EODTable.TableName + "] ([EID] BIGINT NOT NULL, [CID] NTEXT NOT NULL, [VALUE] NTEXT NULL, [SOURCE] CHAR(1) NOT NULL)";
+                DBUtil.SaveTable(CalendarFile, CalendarTable, SqlCmd);
+            }
         }
         private void ReadTables(string SymbolName)
         {
@@ -73,6 +81,9 @@ namespace Shyu
             SymbolName = SymbolName.Replace("_P", "-P");
             return SymbolName;
         }
+        string SymbolNames = string.Empty;
+        string CsvString = string.Empty;
+
         private void LoadDataWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             PrintInfo("Start...");
@@ -81,72 +92,81 @@ namespace Shyu
             int lineCount = File.ReadLines(EOD_File.FullName).Count();
             PrintInfo("TotalLines: " + lineCount.ToString());
             StreamReader FileCSV_read = new StreamReader(EOD_File.FullName);
-            float p = 0;
-            string line = string.Empty;// "Symbol,Date,Open,High,Low,Close,Volume,Dividend,Split,Adj_Open,Adj_High,Adj_Low,Adj_Close,Adj_Volume";
+            int p = 0;
+            string line = string.Empty;
+
+            //Symbol,Date,Open,High,Low,Close,Volume,Dividend,Split,Adj_Open,Adj_High,Adj_Low,Adj_Close,Adj_Volume
+            //A,1999-11-18,45.5,50.0,40.0,44.0,44739900.0,0.0,1.0,29.92820636107177,32.88813885832062,26.3105110866565,28.94156219532215,44739900.0
+
             string LastSymbolName = string.Empty;
-            while (p < lineCount - 1)
+            while (!FileCSV_read.EndOfStream)
+            //while (p < lineCount)
             {
-                try {
-                    line = FileCSV_read.ReadLine().Trim();
-                    string[] val = Regex.Split(line, ",");
-                    string CurrentSymbolName = CleanUpSymbolName(val[0]);
-                    if (CurrentSymbolName != LastSymbolName)
-                    {
-                        if (p > 0) WriteTables();
-                        ReadTables(CurrentSymbolName);
-                    }
-
-                    bool Valid = true;
-                    DataRow Row = EODTable.NewRow();
-                    long eid = 0;
-                    try { eid = TimeToEID(DateTime.Parse(val[1])); Row["EID"] = eid; } catch { Valid = false; }
-                    try { Row["OPEN"] = Convert.ToSingle(val[2]); } catch { }
-                    try { Row["LOW"] = Convert.ToSingle(val[3]); } catch { }
-                    try { Row["HIGH"] = Convert.ToSingle(val[4]); } catch { }
-                    try { Row["CLOSE"] = Convert.ToSingle(val[5]); } catch { Valid = false; }
-                    try { Row["VOLUME"] = Convert.ToSingle(val[6]); } catch { Row["VOLUME"] = 0; }
-
-                    if (Valid)
-                    {
-                        Row["SOURCE"] = 'Q';
-                        EODTable.Rows.Add(Row);
-
-                        float divident = Convert.ToSingle(val[7]);
-                        if (divident > 0)
-                        {
-                            Row = CalendarTable.NewRow();
-                            Row["CID"] = "DIVIDEND";
-                            Row["EID"] = eid;
-                            Row["VALUE"] = divident.ToString();
-                            Row["SOURCE"] = 'Q';
-                            CalendarTable.Rows.Add(Row);
-                        }
-
-                        float split = Convert.ToSingle(val[8]);
-                        if (split != 1)
-                        {
-                            Row = CalendarTable.NewRow();
-                            Row["CID"] = "SPLIT";
-                            Row["EID"] = eid;
-                            Row["VALUE"] = split.ToString();
-                            Row["SOURCE"] = 'Q';
-                            CalendarTable.Rows.Add(Row);
-
-                        }
-                    }
-
-                    LastSymbolName = CurrentSymbolName;
-                    LoadDataWorker.ReportProgress((int)(p * 100.0f / lineCount));
-                }
-                catch
+                line = FileCSV_read.ReadLine().Trim();
+                if (line.Length > 9)
                 {
-                    PrintInfo("Error Read Line.");
+                    string[] val = Regex.Split(line, ",");
+                    if (val.Length == 14)
+                    {
+                        //CsvString += line + "\n";
+                        string CurrentSymbolName = CleanUpSymbolName(val[0]);
+                        if (CurrentSymbolName != LastSymbolName)
+                        {
+                            if (p > 0) WriteTables();
+                            ReadTables(CurrentSymbolName);
+                        }
+
+                        bool Valid = true;
+                        DataRow Row = EODTable.NewRow();
+                        long eid = 0;
+                        try { eid = TimeToEID(DateTime.Parse(val[1])); Row["EID"] = eid; } catch { Valid = false; }
+                        try { Row["OPEN"] = Convert.ToSingle(val[2]); } catch { }
+                        try { Row["HIGH"] = Convert.ToSingle(val[3]); } catch { }
+                        try { Row["LOW"] = Convert.ToSingle(val[4]); } catch { }
+                        try { Row["CLOSE"] = Convert.ToSingle(val[5]); } catch { Valid = false; }
+                        try { Row["VOLUME"] = Convert.ToSingle(val[6]); } catch { Row["VOLUME"] = 0; }
+
+                        if (Valid)
+                        {
+                            Row["SOURCE"] = 'Q';
+                            EODTable.Rows.Add(Row);
+
+                            float divident = Convert.ToSingle(val[7]);
+                            if (divident > 0)
+                            {
+                                Row = CalendarTable.NewRow();
+                                Row["CID"] = "DIVIDEND";
+                                Row["EID"] = eid;
+                                Row["VALUE"] = divident.ToString();
+                                Row["SOURCE"] = 'Q';
+                                CalendarTable.Rows.Add(Row);
+                            }
+
+                            float split = Convert.ToSingle(val[8]);
+                            if (split != 1)
+                            {
+                                Row = CalendarTable.NewRow();
+                                Row["CID"] = "SPLIT";
+                                Row["EID"] = eid;
+                                Row["VALUE"] = split.ToString();
+                                Row["SOURCE"] = 'Q';
+                                CalendarTable.Rows.Add(Row);
+
+                            }
+                        }
+                        LastSymbolName = CurrentSymbolName;
+                        LoadDataWorker.ReportProgress((int)(p * 100.0f / lineCount));
+                    }
+
                 }
-                //if (p > 100000) break;
-                p += 1;
-
+                //if (p < 1000) PrintInfo(line);
+                p++;
+                if (CancelPending)
+                {
+                    e.Cancel = true;
+                    break;
+                }
             }
-
             WriteTables();
             t = EODTable.Copy();
         }
@@ -154,13 +174,13 @@ namespace Shyu
         private void LoadDataWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage;
-            if(e.ProgressPercentage > 90) File.WriteAllText(@"d:\temp.text", Status.Text);
         }
 
         private void LoadDataWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             progressBar.Value = 0;
-            File.WriteAllText(@"d:\temp.text", Status.Text);
+            File.WriteAllText(@"d:\SymbolNames.txt", SymbolNames);
+            PrintInfo("Done.");
         }
 
         public FileInfo EOD_File;
