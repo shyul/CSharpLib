@@ -50,13 +50,6 @@
     <Compile Include="Control\MainForm.cs" />
     <Compile Include="Control\MenuStripEx.cs" />
     <Compile Include="Control\ToolStripEx.cs" />
-    <Compile Include="Conversion\Conversion.cs" />
-    <Compile Include="Conversion\Conversion_Finance.cs" />
-    <Compile Include="Conversion\Conversion_Time.cs" />
-    <Compile Include="Data\DataTableEx.cs" />
-    <Compile Include="Data\PropertyString.cs" />
-    <Compile Include="Data\Serialization.cs" />
-    <Compile Include="Exchanges.cs" />
     <Compile Include="GridForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -77,6 +70,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyString.cs" />
     <EmbeddedResource Include="GridForm.resx">
       <DependentUpon>GridForm.cs</DependentUpon>
     </EmbeddedResource>

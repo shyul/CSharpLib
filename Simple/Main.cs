@@ -19,15 +19,6 @@ namespace Shyu
         public SimpleMainForm()
         {
             InitializeComponent();
-            tdb = new TechDataBase();
-            tdb.LoadDataWorker = new BackgroundWorker();
-            tdb.Message = Message;
-            tdb.StockCountry = StockCountry.US;
-            tdb.LoadDataWorker.WorkerReportsProgress = true;
-            tdb.LoadDataWorker.WorkerSupportsCancellation = true;
-            tdb.LoadDataWorker.DoWork += new DoWorkEventHandler(tdb.LoadDataWorker_DoWork);
-            tdb.LoadDataWorker.ProgressChanged += new ProgressChangedEventHandler(this.LoadDataWorker_ProgressChanged);
-            tdb.LoadDataWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.LoadDataWorker_RunWorkerCompleted);
             MessageWorker.RunWorkerAsync();
         }
 
@@ -41,23 +32,23 @@ namespace Shyu
                 if (DialogFileOpen.ShowDialog() == DialogResult.OK && DialogFileOpen.FileName != string.Empty)// && DialogFileOpen.DialogResult == DialogResult.OK)
                 {
                     Status.Clear();
-                    tdb.EODInputFile = new FileInfo(DialogFileOpen.FileName);
-                    PrintInfo("Load new file " + tdb.EODInputFile.FullName);
-                    tdb.CancelPending = false;
-                    tdb.LoadDataWorker.RunWorkerAsync();
+                    EOD_File = new FileInfo(DialogFileOpen.FileName);
+                    PrintInfo("Load new file " + EOD_File.FullName);
+                    CancelPending = false;
+                    LoadDataWorker.RunWorkerAsync();
                     btnStart.Text = "Stop";
                 }
             }
             else if (btnStart.Text == "Stop")
             {
-                tdb.CancelPending = true;
+                CancelPending = true;
                 PrintInfo("Cancelled");
                 File.WriteAllText(@"d:\temp.txt", Status.Text);
                 btnStart.Text = "Start";
             }
             else
             {
-                tdb.CancelPending = true;
+                CancelPending = true;
                 btnStart.Text = "Start";
             }
         }
@@ -65,20 +56,20 @@ namespace Shyu
         private void btnMainData_Click(object sender, EventArgs e)
         {
             GridForm g = new GridForm();
-            g.Grid.DataSource = tdb.Table_EOD;
+            g.Grid.DataSource = t;
             g.Show();
         }
 
         private void btnCalendar_Click(object sender, EventArgs e)
         {
             GridForm g = new GridForm();
-            g.Grid.DataSource = tdb.Table_Ratios;
+            g.Grid.DataSource = Calendar;
             g.Show();
         }
 
         private void SimpleMainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            tdb.LoadDataWorker.CancelAsync();
+            LoadDataWorker.CancelAsync();
             MessageWorker.CancelAsync();
             
         }

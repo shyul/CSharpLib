@@ -32,7 +32,9 @@
             this.Status = new System.Windows.Forms.RichTextBox();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.DialogFileOpen = new System.Windows.Forms.OpenFileDialog();
+            this.LoadDataWorker = new System.ComponentModel.BackgroundWorker();
             this.MessageWorker = new System.ComponentModel.BackgroundWorker();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.btnMainData = new System.Windows.Forms.Button();
             this.btnCalendar = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -72,6 +74,14 @@
             // DialogFileOpen
             // 
             this.DialogFileOpen.FileName = "openFileDialog1";
+            // 
+            // LoadDataWorker
+            // 
+            this.LoadDataWorker.WorkerReportsProgress = true;
+            this.LoadDataWorker.WorkerSupportsCancellation = true;
+            this.LoadDataWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.LoadDataWorker_DoWork);
+            this.LoadDataWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.LoadDataWorker_ProgressChanged);
+            this.LoadDataWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.LoadDataWorker_RunWorkerCompleted);
             // 
             // MessageWorker
             // 
@@ -126,7 +136,9 @@
         private System.Windows.Forms.RichTextBox Status;
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.OpenFileDialog DialogFileOpen;
+        private System.ComponentModel.BackgroundWorker LoadDataWorker;
         private System.ComponentModel.BackgroundWorker MessageWorker;
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.Button btnMainData;
         private System.Windows.Forms.Button btnCalendar;
     }
