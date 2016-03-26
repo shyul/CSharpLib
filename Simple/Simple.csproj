@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Control\DataBase.cs" />
+    <Compile Include="Data\DataBase.cs" />
     <Compile Include="Control\MainForm.cs" />
     <Compile Include="Control\MenuStripEx.cs" />
     <Compile Include="Control\ToolStripEx.cs" />
@@ -56,15 +56,12 @@
     <Compile Include="Data\DataTableEx.cs" />
     <Compile Include="Data\PropertyString.cs" />
     <Compile Include="Data\Serialization.cs" />
-    <Compile Include="Exchanges.cs" />
+    <Compile Include="LoadData.cs" />
     <Compile Include="GridForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GridForm.Designer.cs">
       <DependentUpon>GridForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="LoadData.cs">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Main.cs">
       <SubType>Form</SubType>

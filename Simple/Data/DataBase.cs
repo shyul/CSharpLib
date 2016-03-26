@@ -101,8 +101,19 @@ namespace Shyu
             if (File.Exists(DataFile.FullName)) File.Delete(DataFile.FullName);
             if (File.Exists(FilePath + @"\" + FileName + "_log.ldf"))
                 File.Delete(FilePath + @"\" + FileName + "_log.ldf");
-            string TemplatePath = AppDomain.CurrentDomain.BaseDirectory + @"\Empty.mdf";
-            File.Copy(TemplatePath, DataFile.FullName, true);
+            InitDataBaseFile(DataFile);
+        }
+        public static void InitDataBaseFile(FileInfo DataFile)
+        {
+            string FileName = Path.GetFileNameWithoutExtension(DataFile.FullName);
+            string FilePath = Path.GetDirectoryName(DataFile.FullName);
+            if (!File.Exists(DataFile.FullName))
+            {
+                string TemplatePath = AppDomain.CurrentDomain.BaseDirectory + @"\Empty.mdf";
+                File.Copy(TemplatePath, DataFile.FullName, true);
+            }
+            if (File.Exists(FilePath + @"\" + FileName + "_log.ldf"))
+                File.Delete(FilePath + @"\" + FileName + "_log.ldf");
         }
     }
 }

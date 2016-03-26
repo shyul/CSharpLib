@@ -16,6 +16,8 @@ namespace Shyu
 {
     public partial class SimpleMainForm : Form
     {
+        TechDataBase tdb = new TechDataBase();
+
         public SimpleMainForm()
         {
             InitializeComponent();
@@ -81,6 +83,19 @@ namespace Shyu
             tdb.LoadDataWorker.CancelAsync();
             MessageWorker.CancelAsync();
             
+        }
+
+        private void LoadDataWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            progressBar.Value = e.ProgressPercentage;
+        }
+
+        private void LoadDataWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            progressBar.Value = 0;
+            tdb.CancelPending = true;
+            btnStart.Text = "Start";
+            PrintInfo("Done.");
         }
     }
 }

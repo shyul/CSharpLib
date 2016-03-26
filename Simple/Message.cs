@@ -40,7 +40,7 @@ namespace Shyu
             while (true)
             {
                 if (Message.Count > 0) MessageWorker.ReportProgress(1);
-                else MessageWorker.ReportProgress(0);
+                //else MessageWorker.ReportProgress(0);
                 Thread.Sleep(50);
             }
         }
