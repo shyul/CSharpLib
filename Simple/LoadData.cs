@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -111,7 +112,7 @@ namespace Shyu
             Table_Info.AcceptChanges();
         }
 
-        private void InitTables(string SymbolName)
+        private void InitTable_EOD(string SymbolName)
         {
             if (Table_EOD != null) Table_EOD.Dispose();
             Table_EOD = new DataTable();
@@ -126,7 +127,9 @@ namespace Shyu
             Table_EOD.PrimaryKey = new DataColumn[] { Table_EOD.Columns["EID"] };
             Table_EOD.DefaultView.Sort = "EID ASC";
             Table_EOD.AcceptChanges();
-
+        }
+        private void InitTable_Ratios(string SymbolName)
+        {
             if (Table_Ratios != null) Table_Ratios.Dispose();
             Table_Ratios = new DataTable();
             Table_Ratios.TableName = SymbolName;
@@ -143,15 +146,10 @@ namespace Shyu
             if (!Table_EOD.TableName.Contains('_'))
             {
                 PrintInfo("Writing Table: " + Table_EOD.TableName + ", Size: " + Table_EOD.Rows.Count);
-                Table_EOD.AcceptChanges();
-                string SqlCmd = "CREATE TABLE [dbo].[" + Table_EOD.TableName + "] ([EID] BIGINT NOT NULL PRIMARY KEY DEFAULT 0, [OPEN] REAL NULL, [LOW] REAL NULL, [HIGH] REAL NULL, [CLOSE] REAL NOT NULL, [VOLUME] BIGINT NOT NULL, [SOURCE] CHAR(1) NOT NULL)";
-                DBUtil.SaveTable(DataFile_EOD, Table_EOD, SqlCmd);
-                if(Table_Ratios.Rows.Count > 0)
-                {
-                    SqlCmd = "CREATE TABLE [dbo].[" + Table_EOD.TableName + "] ([EID] BIGINT NOT NULL, [RATIOTYPE] INT NOT NULL, [PARAM] NVARCHAR(100) NULL, [VALUE] FLOAT NOT NULL, [SOURCE] NCHAR(1) NOT NULL)";
-                    DBUtil.SaveTable(DataFile_Ratios, Table_Ratios, SqlCmd);
-                }
-                
+
+                WriteDataBase_EOD();
+                WriteDataBase_Ratios();
+
                 if (!Table_Info.Rows.Contains(Table_EOD.TableName))
                 {
                     DataRow Row = Table_Info.NewRow();
@@ -161,18 +159,102 @@ namespace Shyu
                 }
             }
         }
-        private void ReadDataBase(string SymbolName)
+
+
+        public void AppendYahooEOD(string SymbolName)
+        {
+            DateTime CurrentDate = DateTime.Now;
+            long CurrentEID = uConv.TimeToEID(CurrentDate);
+            long LastEID = EODLastEID(SymbolName);
+            DateTime LastEODDate = uConv.EIDToTime(LastEID);
+
+
+
+
+
+            ReadDataBase_EOD(SymbolName);
+            ReadDataBase_Ratios(SymbolName);
+
+
+
+        }
+        public long EODLastEID(string SymbolName)
         {
             if (DBUtil.CheckExistTable(DataFile_EOD, SymbolName))
             {
-                string SqlCmd = "SELECT [EID], [OPEN], [LOW], [HIGH], [CLOSE], [VOLUME], [SOURCE] from [" + SymbolName + "] ORDER BY [EID] ASC;\n";
-                Table_EOD = DBUtil.LoadTable(DataFile_EOD, SymbolName, SqlCmd);
-                SqlCmd = "SELECT [EID], [NAME], [VALUE], [SOURCE] from [" + SymbolName + "] ORDER BY [EID] ASC;\n";
-                Table_Ratios = DBUtil.LoadTable(DataFile_Ratios, SymbolName, SqlCmd);
+                StringBuilder s = new StringBuilder();
+                s.AppendFormat("select TOP 1 [EID] from [{0}] ORDER BY [EID] DESC;", SymbolName);
+                string ResultStr = string.Empty;
+                using (SqlConnection conn = new SqlConnection())
+                {
+                    conn.ConnectionString = DBUtil.GetConnectionString(DataFile_EOD);
+                    conn.Open();
+                    SqlCommand command = new SqlCommand(s.ToString(), conn);
+                    SqlDataReader res = command.ExecuteReader();
+                    while (res.Read()) ResultStr = res[0].ToString();
+                    conn.Close();
+                    conn.Dispose();
+                }
+                return Convert.ToInt64(ResultStr);
             }
             else
-                InitTables(SymbolName);
+                return 0;
         }
+
+
+
+        public void WriteDataBase_EOD()
+        {
+            if (Table_EOD.Rows.Count > 0)
+            {
+                Table_EOD.AcceptChanges();
+                string SqlCmd = "CREATE TABLE [dbo].[" + Table_EOD.TableName + "] ([EID] BIGINT NOT NULL PRIMARY KEY DEFAULT 0, [OPEN] REAL NULL, [LOW] REAL NULL, [HIGH] REAL NULL, [CLOSE] REAL NOT NULL, [VOLUME] BIGINT NOT NULL, [SOURCE] CHAR(1) NOT NULL)";
+                DBUtil.SaveTable(DataFile_EOD, Table_EOD, SqlCmd);
+            }
+        }
+        public void WriteDataBase_Ratios()
+        {
+            if (Table_Ratios.Rows.Count > 0)
+            {
+                Table_Ratios.AcceptChanges();
+                string SqlCmd = "CREATE TABLE [dbo].[" + Table_EOD.TableName + "] ([EID] BIGINT NOT NULL, [RATIOTYPE] INT NOT NULL, [PARAM] NVARCHAR(100) NULL, [VALUE] FLOAT NOT NULL, [SOURCE] NCHAR(1) NOT NULL)";
+                DBUtil.SaveTable(DataFile_Ratios, Table_Ratios, SqlCmd);
+            }
+        }
+        public void ReadDataBase_EOD(string SymbolName)
+        {
+            if (DBUtil.CheckExistTable(DataFile_EOD, SymbolName))
+            {
+                StringBuilder s = new StringBuilder();
+                s.AppendFormat("select * from [{0}] ORDER BY [EID] ASC;", SymbolName);
+                Table_EOD = DBUtil.LoadTable(DataFile_EOD, SymbolName, s.ToString());
+                Table_EOD.TableName = SymbolName;
+                Table_EOD.PrimaryKey = new DataColumn[] { Table_EOD.Columns["EID"] };
+                Table_EOD.DefaultView.Sort = "EID ASC";
+                Table_EOD.AcceptChanges();
+            }
+            else
+                InitTable_EOD(SymbolName);
+        }
+        public void ReadDataBase_Ratios(string SymbolName)
+        {
+            if (DBUtil.CheckExistTable(DataFile_Ratios, SymbolName))
+            {
+                StringBuilder s = new StringBuilder();
+                s.AppendFormat("select * from [{0}] ORDER BY [EID] ASC;", SymbolName);
+                Table_Ratios = DBUtil.LoadTable(DataFile_Ratios, SymbolName, s.ToString());
+            }
+            else
+                InitTable_Ratios(SymbolName);
+        }
+
+
+
+
+
+
+
+
 
         public bool CancelPending = false;
         public FileInfo EODInputFile;
@@ -200,8 +282,9 @@ namespace Shyu
             //A,1999-11-18,45.5,50.0,40.0,44.0,44739900.0,0.0,1.0,29.92820636107177,32.88813885832062,26.3105110866565,28.94156219532215,44739900.0
 
             string LastSymbolName = string.Empty;
-            while (!FileCSV_read.EndOfStream)
+
             //while (p < lineCount)
+            while (!FileCSV_read.EndOfStream) 
             {
                 line = FileCSV_read.ReadLine().Trim();
                 if (line.Length > 9)
@@ -213,13 +296,25 @@ namespace Shyu
                         if (CurrentSymbolName != LastSymbolName)
                         {
                             if (p > 0) WriteDataBase();
-                            ReadDataBase(CurrentSymbolName);
+                            ReadDataBase_EOD(CurrentSymbolName);
+                            ReadDataBase_Ratios(CurrentSymbolName);
                         }
 
                         bool Valid = true;
                         DataRow Row = Table_EOD.NewRow();
                         long eid = 0;
-                        try { eid = uConv.TimeToEID(DateTime.Parse(val[1])); Row["EID"] = eid; } catch { Valid = false; }
+
+                        try
+                        {
+                            DateTime Date = DateTime.Parse(val[1]);
+                            eid = uConv.TimeToEID(Date);
+                            Row["EID"] = eid;
+                        }
+                        catch
+                        {
+                            Valid = false;
+                        }
+
                         try { Row["OPEN"] = Convert.ToSingle(val[2]); } catch { }
                         try { Row["HIGH"] = Convert.ToSingle(val[3]); } catch { }
                         try { Row["LOW"] = Convert.ToSingle(val[4]); } catch { }
@@ -278,6 +373,37 @@ namespace Shyu
         {
             if (Message.Count < 100) Message.Enqueue(" " + Text + "\n");
         }
+
+
+
+
+
+
+
+        public DataTable GetCorrectedTable(string SymbolName)
+        {
+            DataTable t = new DataTable();
+
+
+
+            return t;
+        }
+
+
+
+
+        public DataTable LoadEODTable(string SymbolName)
+        {
+            StringBuilder s = new StringBuilder();
+            s.AppendFormat("select [EID], [OPEN], [HIGH], [LOW], [CLOSE], [VOLUME] from [{0}] ORDER BY [EID] ASC;", SymbolName);
+            return DBUtil.LoadTable(DataFile_EOD, SymbolName, s.ToString());
+        }
+        public DataTable LoadRatioTable(string SymbolName, RatioType ratioType)
+        {
+            StringBuilder s = new StringBuilder();
+            s.AppendFormat("select [EID], [PARAM], [VALUE] from [{0}] where [RATIOTYPE] = {1} ORDER BY [EID] ASC;", SymbolName, (int)ratioType);
+            return DBUtil.LoadTable(DataFile_Ratios, SymbolName, s.ToString());
+        }
     }
 
     public enum RatioType
@@ -285,6 +411,13 @@ namespace Shyu
         Split = 0,
         Dividend = 1,
         EPS = 2,
+    }
+
+    public enum EODCorrectionLevel
+    {
+        None = 0,
+        Split = 1,
+        SplitDividend = 2
     }
 
     /*select TOP 1 * from [AAPL] ORDER BY [EID] DESC;
@@ -298,4 +431,6 @@ namespace Shyu
         public const string I = "Interactive Brokers";
         public const string Y = "Yahoo";
     }
+
+
 }

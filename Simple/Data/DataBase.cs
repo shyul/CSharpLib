@@ -10,7 +10,7 @@ using System.IO;
 
 namespace Shyu
 {
-    public class DBUtil
+    public partial class DBUtil
     {
         public static string GetConnectionString(FileInfo DataFile)
         {
@@ -94,6 +94,7 @@ namespace Shyu
             else
                 return false;
         }
+
         public static void ResetDataBaseFile(FileInfo DataFile)
         {
             string FileName = Path.GetFileNameWithoutExtension(DataFile.FullName);
@@ -115,5 +116,6 @@ namespace Shyu
             if (File.Exists(FilePath + @"\" + FileName + "_log.ldf"))
                 File.Delete(FilePath + @"\" + FileName + "_log.ldf");
         }
+
     }
 }
