@@ -40,6 +40,7 @@
             this.Grid.Name = "Grid";
             this.Grid.Size = new System.Drawing.Size(669, 618);
             this.Grid.TabIndex = 0;
+            this.Grid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.Grid_CellFormatting);
             // 
             // GridForm
             // 

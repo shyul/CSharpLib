@@ -11,6 +11,7 @@ using Shyu.UserControl;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Shyu.Finance;
 
 namespace Shyu
 {
@@ -24,10 +25,9 @@ namespace Shyu
             tdb = new TechDataBase();
             tdb.LoadDataWorker = new BackgroundWorker();
             tdb.Message = Message;
-            tdb.StockCountry = StockCountry.US;
             tdb.LoadDataWorker.WorkerReportsProgress = true;
             tdb.LoadDataWorker.WorkerSupportsCancellation = true;
-            tdb.LoadDataWorker.DoWork += new DoWorkEventHandler(tdb.LoadDataWorker_DoWork);
+            tdb.LoadDataWorker.DoWork += new DoWorkEventHandler(tdb.ImportData_DoWork);
             tdb.LoadDataWorker.ProgressChanged += new ProgressChangedEventHandler(this.LoadDataWorker_ProgressChanged);
             tdb.LoadDataWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.LoadDataWorker_RunWorkerCompleted);
             MessageWorker.RunWorkerAsync();
@@ -64,15 +64,17 @@ namespace Shyu
             }
         }
 
-        private void btnMainData_Click(object sender, EventArgs e)
+        private void btnEOD_Click(object sender, EventArgs e)
         {
+            tdb.Table_EOD = HistoricalData.ReadDataBase_EOD(tdb.F.DataFile_EOD, tbSymbolName.Text);
             GridForm g = new GridForm();
             g.Grid.DataSource = tdb.Table_EOD;
             g.Show();
         }
 
-        private void btnCalendar_Click(object sender, EventArgs e)
+        private void btnRatios_Click(object sender, EventArgs e)
         {
+            tdb.Table_Ratios = HistoricalData.ReadDataBase_Ratios(tdb.F.DataFile_Ratios, tbSymbolName.Text);
             GridForm g = new GridForm();
             g.Grid.DataSource = tdb.Table_Ratios;
             g.Show();
@@ -82,7 +84,7 @@ namespace Shyu
         {
             tdb.LoadDataWorker.CancelAsync();
             MessageWorker.CancelAsync();
-            
+
         }
 
         private void LoadDataWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -96,6 +98,104 @@ namespace Shyu
             tdb.CancelPending = true;
             btnStart.Text = "Start";
             PrintInfo("Done.");
+        }
+
+        private void btnRun_Click(object sender, EventArgs e)
+        {
+            string SymbolName = tbSymbolName.Text;
+            DateTime StartTime = uConv.EIDToTime(HistoricalData.EODLastEID(tdb.F.DataFile_EOD, SymbolName));
+            StartTime = new DateTime(StartTime.Year, StartTime.Month, StartTime.Day + 1);
+
+            DateTime StopTime = DateTime.Now;
+
+            int days = uConv.Round((float)(StopTime - StartTime).TotalDays);
+
+            bool NeedsUpdate = false;
+
+            for (int i = 0; i < days; i++)
+            {
+                NeedsUpdate = uConv.IsTradingDate(new DateTime(StartTime.Year, StartTime.Month, StartTime.Day + i));
+                if (NeedsUpdate) break;
+            }
+            DataTable YahooTable = new DataTable();
+            if (NeedsUpdate)
+            {
+                YahooTable = ImportYahoo.GetYahooEOD(SymbolName, StartTime, StopTime);
+
+                if (YahooTable.Rows.Count > 0)
+                {
+                    tdb.Table_EOD = HistoricalData.ReadDataBase_EOD(tdb.F.DataFile_EOD, SymbolName);
+                    tdb.Table_Ratios = HistoricalData.ReadDataBase_Ratios(tdb.F.DataFile_Ratios, SymbolName);
+                    for (int i = 0; i < YahooTable.Rows.Count; i++)
+                    {
+                        bool Valid = true;
+                        DataRow Row = tdb.Table_EOD.NewRow();
+                        long eid = 0;
+
+                        try
+                        {
+                            DateTime Date = DateTime.Parse(YahooTable.Rows[i]["DATE"].ToString());
+                            eid = uConv.TimeToEID(Date);
+                            Row["EID"] = eid;
+                        }
+                        catch
+                        {
+                            Valid = false;
+                        }
+
+                        DataRow FindEIDRow = tdb.Table_EOD.Rows.Find(eid);
+                        if (FindEIDRow != null) Valid = false;
+
+                        if (Valid)
+                        {
+                            Row["OPEN"] = YahooTable.Rows[i]["OPEN"];
+                            Row["LOW"] = YahooTable.Rows[i]["LOW"];
+                            Row["HIGH"] = YahooTable.Rows[i]["HIGH"];
+                            Row["CLOSE"] = YahooTable.Rows[i]["CLOSE"];
+                            Row["VOLUME"] = YahooTable.Rows[i]["VOLUME"];
+                            Row["SOURCE"] = 'Y';
+                            tdb.Table_EOD.Rows.Add(Row);
+
+                            float dividend = Convert.ToSingle(YahooTable.Rows[i]["DIVIDEND"]);
+                            if (dividend > 0 && HistoricalData.Load_Ratios(tdb.F.DataFile_Ratios, SymbolName, RatioType.Dividend, eid).Rows.Count == 0)
+                            {
+                                Row = tdb.Table_Ratios.NewRow();
+                                Row["EID"] = eid;
+                                Row["RATIOTYPE"] = (int)RatioType.Dividend;
+                                Row["PARAM"] = "MRQ";
+                                Row["VALUE"] = dividend;
+                                Row["SOURCE"] = 'Y';
+                                tdb.Table_Ratios.Rows.Add(Row);
+                            }
+
+                            float split = Convert.ToSingle(YahooTable.Rows[i]["SPLIT"]);
+                            if (split != 1 && HistoricalData.Load_Ratios(tdb.F.DataFile_Ratios, SymbolName, RatioType.Split, eid).Rows.Count == 0)
+                            {
+                                Row = tdb.Table_Ratios.NewRow();
+                                Row["EID"] = eid;
+                                Row["RATIOTYPE"] = (int)RatioType.Split;
+                                Row["VALUE"] = split;
+                                Row["SOURCE"] = 'Y';
+                                tdb.Table_Ratios.Rows.Add(Row);
+                            }
+                        }
+                    }
+                    HistoricalData.WriteDataBase_EOD(tdb.F.DataFile_EOD, tdb.Table_EOD);
+                    HistoricalData.WriteDataBase_Ratios(tdb.F.DataFile_Ratios, tdb.Table_Ratios);
+                }
+                else
+                {
+                    MessageBox.Show("Nothing to update even it seems need update");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Nothing to update");
+            }
+
+            GridForm g = new GridForm();
+            g.Grid.DataSource = YahooTable;// tdb.Table_EOD;
+            g.Show();
         }
     }
 }

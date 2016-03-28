@@ -33,8 +33,10 @@
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.DialogFileOpen = new System.Windows.Forms.OpenFileDialog();
             this.MessageWorker = new System.ComponentModel.BackgroundWorker();
-            this.btnMainData = new System.Windows.Forms.Button();
-            this.btnCalendar = new System.Windows.Forms.Button();
+            this.btnEOD = new System.Windows.Forms.Button();
+            this.btnRatios = new System.Windows.Forms.Button();
+            this.tbSymbolName = new System.Windows.Forms.TextBox();
+            this.btnRun = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStart
@@ -80,35 +82,57 @@
             this.MessageWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.MessageWorker_DoWork);
             this.MessageWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.MessageWorker_ProgressChanged);
             // 
-            // btnMainData
+            // btnEOD
             // 
-            this.btnMainData.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnMainData.Location = new System.Drawing.Point(13, 488);
-            this.btnMainData.Name = "btnMainData";
-            this.btnMainData.Size = new System.Drawing.Size(75, 23);
-            this.btnMainData.TabIndex = 3;
-            this.btnMainData.Text = "Main Data";
-            this.btnMainData.UseVisualStyleBackColor = true;
-            this.btnMainData.Click += new System.EventHandler(this.btnMainData_Click);
+            this.btnEOD.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnEOD.Location = new System.Drawing.Point(94, 488);
+            this.btnEOD.Name = "btnEOD";
+            this.btnEOD.Size = new System.Drawing.Size(75, 23);
+            this.btnEOD.TabIndex = 3;
+            this.btnEOD.Text = "EOD";
+            this.btnEOD.UseVisualStyleBackColor = true;
+            this.btnEOD.Click += new System.EventHandler(this.btnEOD_Click);
             // 
-            // btnCalendar
+            // btnRatios
             // 
-            this.btnCalendar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnCalendar.Location = new System.Drawing.Point(94, 488);
-            this.btnCalendar.Name = "btnCalendar";
-            this.btnCalendar.Size = new System.Drawing.Size(75, 23);
-            this.btnCalendar.TabIndex = 4;
-            this.btnCalendar.Text = "Calendar";
-            this.btnCalendar.UseVisualStyleBackColor = true;
-            this.btnCalendar.Click += new System.EventHandler(this.btnCalendar_Click);
+            this.btnRatios.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRatios.Location = new System.Drawing.Point(175, 488);
+            this.btnRatios.Name = "btnRatios";
+            this.btnRatios.Size = new System.Drawing.Size(75, 23);
+            this.btnRatios.TabIndex = 4;
+            this.btnRatios.Text = "Ratios";
+            this.btnRatios.UseVisualStyleBackColor = true;
+            this.btnRatios.Click += new System.EventHandler(this.btnRatios_Click);
+            // 
+            // tbSymbolName
+            // 
+            this.tbSymbolName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tbSymbolName.Location = new System.Drawing.Point(13, 489);
+            this.tbSymbolName.Name = "tbSymbolName";
+            this.tbSymbolName.Size = new System.Drawing.Size(75, 21);
+            this.tbSymbolName.TabIndex = 5;
+            this.tbSymbolName.Text = "AAPL";
+            // 
+            // btnRun
+            // 
+            this.btnRun.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRun.Location = new System.Drawing.Point(377, 487);
+            this.btnRun.Name = "btnRun";
+            this.btnRun.Size = new System.Drawing.Size(75, 23);
+            this.btnRun.TabIndex = 6;
+            this.btnRun.Text = "Run";
+            this.btnRun.UseVisualStyleBackColor = true;
+            this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
             // SimpleMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(464, 523);
-            this.Controls.Add(this.btnCalendar);
-            this.Controls.Add(this.btnMainData);
+            this.Controls.Add(this.btnRun);
+            this.Controls.Add(this.tbSymbolName);
+            this.Controls.Add(this.btnRatios);
+            this.Controls.Add(this.btnEOD);
             this.Controls.Add(this.Status);
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.btnStart);
@@ -117,6 +141,7 @@
             this.Text = "Simple";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SimpleMainForm_FormClosing);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -127,8 +152,10 @@
         private System.Windows.Forms.ProgressBar progressBar;
         private System.Windows.Forms.OpenFileDialog DialogFileOpen;
         private System.ComponentModel.BackgroundWorker MessageWorker;
-        private System.Windows.Forms.Button btnMainData;
-        private System.Windows.Forms.Button btnCalendar;
+        private System.Windows.Forms.Button btnEOD;
+        private System.Windows.Forms.Button btnRatios;
+        private System.Windows.Forms.TextBox tbSymbolName;
+        private System.Windows.Forms.Button btnRun;
     }
 }
 
