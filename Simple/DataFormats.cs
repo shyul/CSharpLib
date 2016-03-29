@@ -134,14 +134,14 @@ namespace Shyu.Finance
                 DBUtil.SaveTable(DataFile, EODTable, SqlCmd);
             }
         }
-        public static DataTable ReadDataBase_EOD(FileInfo DataFile, string SymbolName)
+
+
+        public static DataTable ReadDataBase_EOD(FileInfo DataFile, string SqlCmd, string SymbolName)
         {
             if (DBUtil.CheckExistTable(DataFile, SymbolName))
             {
                 DataTable EODTable = new DataTable();
-                StringBuilder s = new StringBuilder();
-                s.AppendFormat("select * from [{0}] ORDER BY [EID] ASC;", SymbolName);
-                EODTable = DBUtil.LoadTable(DataFile, SymbolName, s.ToString());
+                EODTable = DBUtil.LoadTable(DataFile, SymbolName, SqlCmd);
                 EODTable.TableName = SymbolName;
                 EODTable.PrimaryKey = new DataColumn[] { EODTable.Columns["EID"] };
                 EODTable.DefaultView.Sort = "EID ASC";
@@ -151,13 +151,39 @@ namespace Shyu.Finance
             else
                 return Init_StockEODTable(SymbolName);
         }
-        public static DataTable Load_EOD(FileInfo DataFile, string SymbolName)
+        public static DataTable ReadDataBase_EOD(FileInfo DataFile, string SymbolName)
+        {
+            StringBuilder s = new StringBuilder();
+            s.AppendFormat("select * from [{0}] ORDER BY [EID] ASC;", SymbolName);
+            return ReadDataBase_EOD(DataFile, s.ToString(), SymbolName);
+        }
+        public static DataTable ReadDataBase_EOD(FileInfo DataFile, DateTime StartTime, DateTime StopTime, string SymbolName)
+        {
+            long StartEID = uConv.TimeToEID(StartTime);
+            long StopEID = uConv.TimeToEID(StopTime);
+            if (StartEID < StopEID)
+            {
+                StringBuilder s = new StringBuilder();
+                s.AppendFormat("select * from [{0}] WHERE ([EID] >= {1} AND [EID] <= {2}) ORDER BY [EID] ASC;",
+                    SymbolName, StartEID.ToString(), StopEID.ToString());
+                return ReadDataBase_EOD(DataFile, s.ToString(), SymbolName);
+            }
+            else
+                return Init_StockEODTable(SymbolName);
+        }
+
+
+
+        public static DataTable Load_EOD(FileInfo DataFile, DateTime StartTime, DateTime StopTime, string SymbolName)
         {
             if (DBUtil.CheckExistTable(DataFile, SymbolName))
             {
+                long StartEID = uConv.TimeToEID(StartTime);
+                long StopEID = uConv.TimeToEID(StopTime);
                 DataTable EODTable = new DataTable();
                 StringBuilder s = new StringBuilder();
-                s.AppendFormat("select [EID], [OPEN], [HIGH], [LOW], [CLOSE], [VOLUME] from [{0}] ORDER BY [EID] ASC;", SymbolName);
+                s.AppendFormat("select [EID], [OPEN], [HIGH], [LOW], [CLOSE], [VOLUME] from [{0}] WHERE ([EID] >= {1} AND [EID] <= {2}) ORDER BY [EID] ASC;",
+                    SymbolName, StartEID.ToString(), StopEID.ToString());
                 EODTable = DBUtil.LoadTable(DataFile, SymbolName, s.ToString());
                 EODTable.TableName = SymbolName;
                 EODTable.PrimaryKey = new DataColumn[] { EODTable.Columns["EID"] };
@@ -231,6 +257,28 @@ namespace Shyu.Finance
             else
                 return InitRatiosTable(SymbolName);
         }
+
+        public static DataTable Load_Ratios(FileInfo DataFile, DateTime StartTime, DateTime StopTime, string SymbolName)
+        {
+            if (DBUtil.CheckExistTable(DataFile, SymbolName))
+            {
+                long StartEID = uConv.TimeToEID(StartTime);
+                long StopEID = uConv.TimeToEID(StopTime);
+                DataTable RatiosTable = new DataTable();
+                StringBuilder s = new StringBuilder();
+                s.AppendFormat("select [EID], [RATIOTYPE], [PARAM], [VALUE] from [{0}] WHERE ([EID] >= {1} AND [EID] <= {2}) ORDER BY [EID] ASC;",
+                    SymbolName, StartEID.ToString(), StopEID.ToString());
+                RatiosTable = DBUtil.LoadTable(DataFile, SymbolName, s.ToString());
+                RatiosTable.TableName = SymbolName;
+                RatiosTable.PrimaryKey = new DataColumn[] { RatiosTable.Columns["EID"], RatiosTable.Columns["RATIOTYPE"] };
+                RatiosTable.DefaultView.Sort = "EID ASC";
+                RatiosTable.AcceptChanges();
+                return RatiosTable;
+            }
+            else
+                return InitRatiosTable(SymbolName);
+        }
+
         public static DataTable Load_Ratios(FileInfo DataFile, string SymbolName, RatioType ratioType)
         {
             if (DBUtil.CheckExistTable(DataFile, SymbolName))
@@ -248,6 +296,8 @@ namespace Shyu.Finance
             else
                 return InitRatiosTable(SymbolName);
         }
+
+
         public static DataTable Load_Ratios(FileInfo DataFile, string SymbolName, RatioType ratioType, long EID)
         {
             if (DBUtil.CheckExistTable(DataFile, SymbolName))
@@ -296,7 +346,7 @@ namespace Shyu.Finance
         EPS = 2,
     }
 
-    public enum EODCorrectionLevel
+    public enum AdjLevel
     {
         None = 0,
         Split = 1,

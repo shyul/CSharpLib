@@ -37,6 +37,7 @@
             this.btnRatios = new System.Windows.Forms.Button();
             this.tbSymbolName = new System.Windows.Forms.TextBox();
             this.btnRun = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnStart
@@ -124,11 +125,22 @@
             this.btnRun.UseVisualStyleBackColor = true;
             this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
             // 
+            // btnLoad
+            // 
+            this.btnLoad.Location = new System.Drawing.Point(296, 487);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(75, 23);
+            this.btnLoad.TabIndex = 7;
+            this.btnLoad.Text = "Load";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
+            // 
             // SimpleMainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(464, 523);
+            this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnRun);
             this.Controls.Add(this.tbSymbolName);
             this.Controls.Add(this.btnRatios);
@@ -156,6 +168,7 @@
         private System.Windows.Forms.Button btnRatios;
         private System.Windows.Forms.TextBox tbSymbolName;
         private System.Windows.Forms.Button btnRun;
+        private System.Windows.Forms.Button btnLoad;
     }
 }
 

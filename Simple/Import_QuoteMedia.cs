@@ -17,6 +17,109 @@ namespace Shyu.Finance
 
         public DataTable StockInfoTable, Table_EOD, Table_Ratios;
 
+        //public DataTable Load_EOD(string SymbolName, DateTime StartTime, DateTime StopTime, PeriodUnit unit, int Period, CorrectionLevel Lv)
+        public DataTable Load_EOD(string SymbolName, DateTime StartTime, DateTime StopTime, AdjLevel Lv)
+        {
+            DataTable e = HistoricalData.Load_EOD(F.DataFile_EOD, StartTime, StopTime, SymbolName);
+            DataTable r = HistoricalData.Load_Ratios(F.DataFile_Ratios, StartTime, StopTime, SymbolName);
+
+            uTable.AddColumn(e, "DIVIDEND", typeof(float));
+            uTable.AddColumn(e, "SPLIT", typeof(float));
+            e.AcceptChanges();
+
+            for (int i = 0; i < r.Rows.Count; i++)
+            {
+                long eid = Convert.ToInt64(r.Rows[i]["EID"]);
+                RatioType tp = (RatioType)Convert.ToInt32(r.Rows[i]["RATIOTYPE"]);
+
+                DataRow FindRow = e.Rows.Find(eid);
+
+                if (FindRow != null)
+                {
+                    if (tp == RatioType.Dividend)
+                    {
+                        FindRow["DIVIDEND"] = r.Rows[i]["VALUE"];
+                    }
+                    else if(tp == RatioType.Split)
+                    {
+                        FindRow["SPLIT"] = r.Rows[i]["VALUE"];
+                    }
+                }
+            }
+
+            if(Lv != AdjLevel.None)
+            {
+                uTable.AddColumn(e, "ADJ", typeof(float));
+                uTable.AddColumn(e, "ADJ_VOL", typeof(float));
+                e.AcceptChanges();
+
+                for (int i = 1; i < e.Rows.Count; i++)
+                {
+                    float divident = (float)uTable.LoadCell(e, i, "DIVIDEND", 0).Result;
+                    float split = (float)uTable.LoadCell(e, i, "SPLIT", 1).Result;
+                    double close = uTable.LoadCell(e, i, "CLOSE").Result;
+
+                    float adj = (float)((close + divident) * split / close);
+                    float adj_vol = split;
+
+                    e.Rows[i - 1]["ADJ"] = adj;
+                    e.Rows[i - 1]["ADJ_VOL"] = adj_vol;
+                }
+
+                for (int i = e.Rows.Count - 1; i >= 1; i--)
+                {
+                    float last_adj = (float)uTable.LoadCell(e, i - 1, "ADJ", 1).Result;
+                    float adj = (float)uTable.LoadCell(e, i, "ADJ", 1).Result;
+                    if (adj != 1)
+                    {
+                        last_adj = adj * last_adj;
+                        e.Rows[i - 1]["ADJ"] = last_adj;
+                    }
+
+                    float last_adj_vol = (float)uTable.LoadCell(e, i - 1, "ADJ_VOL", 1).Result;
+                    float adj_vol = (float)uTable.LoadCell(e, i, "ADJ_VOL", 1).Result;
+                    if (adj_vol != 1)
+                    {
+                        last_adj_vol = adj_vol * last_adj_vol;
+                        e.Rows[i - 1]["ADJ_VOL"] = last_adj_vol;
+                    }
+                }
+
+                e.Rows[e.Rows.Count - 1]["ADJ"] = 1;
+                e.Rows[e.Rows.Count - 1]["ADJ_VOL"] = 1;
+
+                for (int i = 0; i < e.Rows.Count; i++)
+                {
+                    float adj = (float)uTable.LoadCell(e, i, "ADJ", 1).Result;
+                    float adj_vol = (float)uTable.LoadCell(e, i, "ADJ_VOL", 1).Result;
+
+                    if (Lv == AdjLevel.SplitDividend)
+                    {
+                        e.Rows[i]["OPEN"] = uTable.LoadCell(e, i, "OPEN").Result / adj;
+                        e.Rows[i]["HIGH"] = uTable.LoadCell(e, i, "HIGH").Result / adj;
+                        e.Rows[i]["LOW"] = uTable.LoadCell(e, i, "LOW").Result / adj;
+                        e.Rows[i]["CLOSE"] = uTable.LoadCell(e, i, "CLOSE").Result / adj;
+                    }
+                    else if (Lv == AdjLevel.Split)
+                    {
+                        e.Rows[i]["OPEN"] = uTable.LoadCell(e, i, "OPEN").Result / adj_vol;
+                        e.Rows[i]["HIGH"] = uTable.LoadCell(e, i, "HIGH").Result / adj_vol;
+                        e.Rows[i]["LOW"] = uTable.LoadCell(e, i, "LOW").Result / adj_vol;
+                        e.Rows[i]["CLOSE"] = uTable.LoadCell(e, i, "CLOSE").Result / adj_vol;
+                    }
+
+                    e.Rows[i]["VOLUME"] = uTable.LoadCell(e, i, "VOLUME").Result * adj_vol;
+                    e.Rows[i]["DIVIDEND"] = (float)uTable.LoadCell(e, i, "DIVIDEND", 0).Result;
+                    e.Rows[i]["SPLIT"] = (float)uTable.LoadCell(e, i, "SPLIT", 1).Result;
+                }
+
+            }
+            e.AcceptChanges();
+            uTable.RemoveColumn(e, "ADJ");
+            uTable.RemoveColumn(e, "ADJ_VOL");
+            return e;
+        }
+
         private void WriteDataBase()
         {
             if (!Table_EOD.TableName.Contains('_'))

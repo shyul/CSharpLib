@@ -197,5 +197,15 @@ namespace Shyu
             g.Grid.DataSource = YahooTable;// tdb.Table_EOD;
             g.Show();
         }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            string SymbolName = tbSymbolName.Text;
+            DataTable t = tdb.Load_EOD(SymbolName, new DateTime(1980, 12, 12), new DateTime(2015, 5, 8), AdjLevel.SplitDividend);
+
+            GridForm g = new GridForm();
+            g.Grid.DataSource = t;// tdb.Table_EOD;
+            g.Show();
+        }
     }
 }

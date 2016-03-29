@@ -1,0 +1,1 @@
+﻿select * from [AAPL] WHERE ([EID]>=1125273600 AND [EID] <= 1126051200) ORDER BY [EID] ASC;

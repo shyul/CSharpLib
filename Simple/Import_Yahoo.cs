@@ -65,7 +65,6 @@ namespace Shyu
                         Row["ADJ_CLOSE"] = adj_close;
                         long volume = Convert.ToInt64(InputLineVal[5]);
                         Row["ADJ_VOLUME"] = volume;
-                        //Row["VOLUME"] = volume / adj_price;
                         Row["DIVIDEND"] = 0;
                         Row["SPLIT"] = 1;
                         Row["ADJ"] = adj;
@@ -85,8 +84,6 @@ namespace Shyu
                     double real_adj = adj - next_adj + 1;
                     double next_dividend = next_close * real_adj - next_close;
 
-                    
-
                     last_adj_split = uTable.LoadCell(YahooTable, i - 1, "ADJ_SPLIT").Result;
                     if (next_dividend >= next_close * 0.9)
                     {
@@ -103,10 +100,7 @@ namespace Shyu
                 }
                 last_adj_split = uTable.LoadCell(YahooTable, 0, "ADJ_SPLIT", 1).Result;
                 double last_adj_volume = uTable.LoadCell(YahooTable, 0, "ADJ_VOLUME", 0).Result;
-
                 YahooTable.Rows[0]["VOLUME"] = last_adj_volume / last_adj_split;
-
-
                 YahooTable.AcceptChanges();
             }
             catch { }

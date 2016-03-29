@@ -12,7 +12,6 @@ using System.Xml.Serialization;
 
 namespace Shyu
 {
-
     public static class uTable
     {
         #region Column Operations
@@ -49,6 +48,12 @@ namespace Shyu
                 if (!t.Columns.Contains(Column.ColumnName))
                     t.Columns.Add(Column);
             t.AcceptChanges();
+        }
+
+        public static void RemoveColumn(DataTable t, string ColumnName)
+        {
+            if (t.Columns.Contains(ColumnName.ToUpper()))
+                t.Columns.Remove(ColumnName);
         }
         #endregion
         public static PropertyString GetConfig(DataTable t, int index, string ColumnName)
