@@ -63,15 +63,6 @@ namespace Shyu.Finance
             }
         }
     }
-    public enum FinancialDataType
-    {
-        FOREX = 0,
-        US_STK = 10,
-        US_OPT = 11,
-        US_FUT = 12,
-        US_BOND = 13,
-        CN_STK = 20,
-    }
 
     public class StockInformationList
     {
@@ -134,8 +125,6 @@ namespace Shyu.Finance
                 DBUtil.SaveTable(DataFile, EODTable, SqlCmd);
             }
         }
-
-
         public static DataTable ReadDataBase_EOD(FileInfo DataFile, string SqlCmd, string SymbolName)
         {
             if (DBUtil.CheckExistTable(DataFile, SymbolName))

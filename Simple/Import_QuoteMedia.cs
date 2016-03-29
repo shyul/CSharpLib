@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace Shyu.Finance
 {
-    public partial class TechDataBase
+    public partial class TechDataBaseQM
     {
         public FinancialDataInfo F = new FinancialDataInfo(FinancialDataType.US_STK);
 
-        public DataTable StockInfoTable, Table_EOD, Table_Ratios;
+        public DataTable StockInfoTable, Table_EOD, rt;
 
-        //public DataTable Load_EOD(string SymbolName, DateTime StartTime, DateTime StopTime, PeriodUnit unit, int Period, CorrectionLevel Lv)
+        //public DataTable Load_EOD( PeriodUnit unit, int Period,)
         public DataTable Load_EOD(string SymbolName, DateTime StartTime, DateTime StopTime, AdjLevel Lv)
         {
             DataTable e = HistoricalData.Load_EOD(F.DataFile_EOD, StartTime, StopTime, SymbolName);
@@ -127,7 +127,7 @@ namespace Shyu.Finance
                 PrintInfo("Writing Table: " + Table_EOD.TableName + ", Size: " + Table_EOD.Rows.Count);
 
                 HistoricalData.WriteDataBase_EOD(F.DataFile_EOD, Table_EOD);
-                HistoricalData.WriteDataBase_Ratios(F.DataFile_Ratios, Table_Ratios);
+                HistoricalData.WriteDataBase_Ratios(F.DataFile_Ratios, rt);
 
                 if (!StockInfoTable.Rows.Contains(Table_EOD.TableName))
                 {
@@ -192,7 +192,7 @@ namespace Shyu.Finance
                         {
                             if (p > 0) WriteDataBase();
                             Table_EOD = HistoricalData.ReadDataBase_EOD(F.DataFile_EOD, CurrentSymbolName);
-                            Table_Ratios = HistoricalData.ReadDataBase_Ratios(F.DataFile_Ratios, CurrentSymbolName);
+                            rt = HistoricalData.ReadDataBase_Ratios(F.DataFile_Ratios, CurrentSymbolName);
                         }
 
                         bool Valid = true;
@@ -234,24 +234,24 @@ namespace Shyu.Finance
                             float dividend = Convert.ToSingle(val[7]);
                             if (dividend > 0)
                             {
-                                Row = Table_Ratios.NewRow();
+                                Row = rt.NewRow();
                                 Row["EID"] = eid;
                                 Row["RATIOTYPE"] = (int)RatioType.Dividend;
                                 Row["PARAM"] = "MRQ";
                                 Row["VALUE"] = dividend;
                                 Row["SOURCE"] = 'Q';
-                                Table_Ratios.Rows.Add(Row);
+                                rt.Rows.Add(Row);
                             }
 
                             float split = Convert.ToSingle(val[8]);
                             if (split != 1)
                             {
-                                Row = Table_Ratios.NewRow();
+                                Row = rt.NewRow();
                                 Row["EID"] = eid;
                                 Row["RATIOTYPE"] = (int)RatioType.Split;
                                 Row["VALUE"] = split;
                                 Row["SOURCE"] = 'Q';
-                                Table_Ratios.Rows.Add(Row);
+                                rt.Rows.Add(Row);
                             }
                         }
                         LastSymbolName = CurrentSymbolName;

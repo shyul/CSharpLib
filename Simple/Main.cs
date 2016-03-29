@@ -17,12 +17,12 @@ namespace Shyu
 {
     public partial class SimpleMainForm : Form
     {
-        TechDataBase tdb = new TechDataBase();
+        TechDataBaseQM tdb = new TechDataBaseQM();
 
         public SimpleMainForm()
         {
             InitializeComponent();
-            tdb = new TechDataBase();
+            tdb = new TechDataBaseQM();
             tdb.LoadDataWorker = new BackgroundWorker();
             tdb.Message = Message;
             tdb.LoadDataWorker.WorkerReportsProgress = true;
@@ -74,9 +74,9 @@ namespace Shyu
 
         private void btnRatios_Click(object sender, EventArgs e)
         {
-            tdb.Table_Ratios = HistoricalData.ReadDataBase_Ratios(tdb.F.DataFile_Ratios, tbSymbolName.Text);
+            tdb.rt = HistoricalData.ReadDataBase_Ratios(tdb.F.DataFile_Ratios, tbSymbolName.Text);
             GridForm g = new GridForm();
-            g.Grid.DataSource = tdb.Table_Ratios;
+            g.Grid.DataSource = tdb.rt;
             g.Show();
         }
 
@@ -125,7 +125,7 @@ namespace Shyu
                 if (YahooTable.Rows.Count > 0)
                 {
                     tdb.Table_EOD = HistoricalData.ReadDataBase_EOD(tdb.F.DataFile_EOD, SymbolName);
-                    tdb.Table_Ratios = HistoricalData.ReadDataBase_Ratios(tdb.F.DataFile_Ratios, SymbolName);
+                    tdb.rt = HistoricalData.ReadDataBase_Ratios(tdb.F.DataFile_Ratios, SymbolName);
                     for (int i = 0; i < YahooTable.Rows.Count; i++)
                     {
                         bool Valid = true;
@@ -159,29 +159,29 @@ namespace Shyu
                             float dividend = Convert.ToSingle(YahooTable.Rows[i]["DIVIDEND"]);
                             if (dividend > 0 && HistoricalData.Load_Ratios(tdb.F.DataFile_Ratios, SymbolName, RatioType.Dividend, eid).Rows.Count == 0)
                             {
-                                Row = tdb.Table_Ratios.NewRow();
+                                Row = tdb.rt.NewRow();
                                 Row["EID"] = eid;
                                 Row["RATIOTYPE"] = (int)RatioType.Dividend;
                                 Row["PARAM"] = "MRQ";
                                 Row["VALUE"] = dividend;
                                 Row["SOURCE"] = 'Y';
-                                tdb.Table_Ratios.Rows.Add(Row);
+                                tdb.rt.Rows.Add(Row);
                             }
 
                             float split = Convert.ToSingle(YahooTable.Rows[i]["SPLIT"]);
                             if (split != 1 && HistoricalData.Load_Ratios(tdb.F.DataFile_Ratios, SymbolName, RatioType.Split, eid).Rows.Count == 0)
                             {
-                                Row = tdb.Table_Ratios.NewRow();
+                                Row = tdb.rt.NewRow();
                                 Row["EID"] = eid;
                                 Row["RATIOTYPE"] = (int)RatioType.Split;
                                 Row["VALUE"] = split;
                                 Row["SOURCE"] = 'Y';
-                                tdb.Table_Ratios.Rows.Add(Row);
+                                tdb.rt.Rows.Add(Row);
                             }
                         }
                     }
                     HistoricalData.WriteDataBase_EOD(tdb.F.DataFile_EOD, tdb.Table_EOD);
-                    HistoricalData.WriteDataBase_Ratios(tdb.F.DataFile_Ratios, tdb.Table_Ratios);
+                    HistoricalData.WriteDataBase_Ratios(tdb.F.DataFile_Ratios, tdb.rt);
                 }
                 else
                 {
