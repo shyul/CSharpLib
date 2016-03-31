@@ -107,33 +107,5 @@ namespace Shyu
 
             return YahooTable;
         }
-
-        public DataTable CleanUpYahoo(DataTable Input)
-        {
-
-
-
-            return Input;
-        }
-
-        /*
-        public void AppendYahooEOD(string SymbolName)
-        {
-            DateTime CurrentDate = DateTime.Now;
-            long CurrentEID = uConv.TimeToEID(CurrentDate);
-            long LastEID = EODLastEID(SymbolName);
-            DateTime LastEODDate = uConv.EIDToTime(LastEID);
-
-
-
-
-
-            ReadDataBase_EOD(SymbolName);
-            ReadDataBase_Ratios(SymbolName);
-
-
-
-        }
-        */
     }
 }

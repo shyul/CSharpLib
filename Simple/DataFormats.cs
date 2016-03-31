@@ -285,8 +285,6 @@ namespace Shyu.Finance
             else
                 return InitRatiosTable(SymbolName);
         }
-
-
         public static DataTable Load_Ratios(FileInfo DataFile, string SymbolName, RatioType ratioType, long EID)
         {
             if (DBUtil.CheckExistTable(DataFile, SymbolName))

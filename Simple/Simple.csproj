@@ -76,6 +76,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataFormats.cs" />
+    <Compile Include="HistoryDataBase.cs" />
     <EmbeddedResource Include="GridForm.resx">
       <DependentUpon>GridForm.cs</DependentUpon>
     </EmbeddedResource>
