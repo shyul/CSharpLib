@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5FD97E3B-4438-47EB-AEEC-8A408CA19D5C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Shyu.UI.Forms</RootNamespace>
+    <AssemblyName>Shyu.UI.Forms</AssemblyName>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="DigitalRune.Windows.Docking">
+      <HintPath>..\DigitalRune.Windows.Docking.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ActionPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ActionPanel.Designer.cs">
+      <DependentUpon>ActionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GridPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GridPanel.Designer.cs">
+      <DependentUpon>GridPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OutputMessagePanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OutputMessagePanel.Designer.cs">
+      <DependentUpon>OutputMessagePanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shyu.Core\Shyu.Core.csproj">
+      <Project>{eb2d4ddd-2a18-4bd2-ac23-cb64e163eaa9}</Project>
+      <Name>Shyu.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shyu.Draw\Shyu.UI.Drawing.csproj">
+      <Project>{9f609c37-3e78-4c28-aeff-d72f7bf55b23}</Project>
+      <Name>Shyu.UI.Drawing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shyu.UI.Controls\Shyu.UI.Controls.csproj">
+      <Project>{193a5d2f-77cb-46f8-a8d7-60699bb569a7}</Project>
+      <Name>Shyu.UI.Controls</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shyu.UI\Shyu.UI.csproj">
+      <Project>{1d61d50d-4f71-40cc-999b-a4ea760d08f2}</Project>
+      <Name>Shyu.UI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ActionPanel.resx">
+      <DependentUpon>ActionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GridPanel.resx">
+      <DependentUpon>GridPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OutputMessagePanel.resx">
+      <DependentUpon>OutputMessagePanel.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
