@@ -61,7 +61,7 @@
     </Compile>
     <Compile Include="StatusStripEx.cs" />
     <Compile Include="TabControlEx.cs" />
-    <Compile Include="ToolStripButtonEx.cs" />
+    <Compile Include="GetToolStripButton.cs" />
     <Compile Include="ToolStripEx.cs" />
   </ItemGroup>
   <ItemGroup>
