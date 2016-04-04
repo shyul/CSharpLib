@@ -15,15 +15,20 @@ namespace Shyu.UI.Controls
         public ToolStripEx()
         {
             DoubleBuffered = true;
-            Renderer = new OsianoToolStripRenderer();
+            Renderer = new ToolStripRenderer(this.BackColor);
         }
     }
-    public class OsianoToolStripRenderer : ToolStripProfessionalRenderer
+    public class ToolStripRenderer : ToolStripProfessionalRenderer
     {
-        public OsianoToolStripRenderer() { RoundedEdges = false; }
+        private Color BackColor = Color.White;
+        public ToolStripRenderer(Color BackColor)
+        {
+            this.BackColor = BackColor;
+            RoundedEdges = false;
+        }
         protected override void OnRenderToolStripBackground(ToolStripRenderEventArgs e)
         {
-            e.Graphics.FillRectangle(new SolidBrush(Color.White), e.AffectedBounds);
+            e.Graphics.FillRectangle(new SolidBrush(BackColor), e.AffectedBounds);
         }
         protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
         {

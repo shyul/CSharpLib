@@ -1,2 +1,2 @@
-# simple
-A simple script editor calling functions.
+# My C# Library
+C# utilities library
