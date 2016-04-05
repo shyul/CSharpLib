@@ -75,6 +75,12 @@
     <Compile Include="GridPanel.Designer.cs">
       <DependentUpon>GridPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="NewObject.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewObject.Designer.cs">
+      <DependentUpon>NewObject.cs</DependentUpon>
+    </Compile>
     <Compile Include="OutputMessagePanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +113,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GridPanel.resx">
       <DependentUpon>GridPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewObject.resx">
+      <DependentUpon>NewObject.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OutputMessagePanel.resx">
       <DependentUpon>OutputMessagePanel.cs</DependentUpon>
