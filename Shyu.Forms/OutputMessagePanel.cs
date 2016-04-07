@@ -18,51 +18,11 @@ namespace Shyu.UI.Forms
         public OutputMessagePanel()
         {
             InitializeComponent();
-            OutputMessageWorker.RunWorkerAsync();
-        }
-
-        public bool StopOutputMessageWorker = false;
-
-        public Queue<string> OutputMessage = new Queue<string>();
-        public void PrintInfo(string Text)
-        {
-            if (OutputMessage.Count < 100) OutputMessage.Enqueue(" " + Text + "\n");
-        }
-        public void Clear()
-        {
-            OutputText.Clear();
-        }
-        public void SaveText(FileInfo TextFile)
-        {
-            File.WriteAllText(TextFile.FullName, OutputText.Text);
-        }
-
-        private void OutputText_SizeChanged(object sender, EventArgs e)
-        {
-            OutputText.SelectionStart = OutputText.Text.Length;
-            OutputText.ScrollToCaret();
-        }
-
-        private void OutputMessageWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            while (!StopOutputMessageWorker)
-            {
-                if (OutputMessage.Count > 0) OutputMessageWorker.ReportProgress(1);
-                Thread.Sleep(50);
-            }
-        }
-        private void OutputMessageWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (e.ProgressPercentage != 0)
-                while (OutputMessage.Count > 0 && !StopOutputMessageWorker)
-                {
-                    OutputText.AppendText(OutputMessage.Dequeue());
-                }
         }
 
         private void OutputPanel_FormClosing(object sender, FormClosingEventArgs e)
         {
-            StopOutputMessageWorker = true;
+            Output.StopOutputMessageWorker = true;
         }
     }
 }

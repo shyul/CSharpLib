@@ -15,7 +15,7 @@ namespace Shyu.UI.Controls
         public ToolStripEx()
         {
             DoubleBuffered = true;
-            Renderer = new ToolStripRenderer(this.BackColor);
+            Renderer = new ToolStripRenderer(Color.White);
         }
     }
     public class ToolStripRenderer : ToolStripProfessionalRenderer
