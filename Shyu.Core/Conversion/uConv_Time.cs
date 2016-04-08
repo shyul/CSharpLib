@@ -45,15 +45,82 @@ namespace Shyu.Core
 
     public enum DateTimeIntervalType
     {
-        Years = 0,
-        Months = 1,
-        Weeks = 2,
-        Days = 3,
-        Hours = 4,
-        Minutes = 5,
-        Seconds = 6,
-        Auto = 7,
-        NotSet = 8
+        Years = 31536000, // 365 days
+        Months = 2419200, // 28 days
+        Weeks = 604800,
+        Days = 86400,
+        Hours = 3600,
+        Minutes = 60,
+        Seconds = 1,
+    }
+    public class Period
+    {
+        public int Length = 1;
+        public DateTimeIntervalType IntervalType = DateTimeIntervalType.Days;
+
+        public Period(int Length, DateTimeIntervalType IntervalType)
+        {
+            this.Length = Length;
+            this.IntervalType = IntervalType;
+        }
+
+        public long GetIntervalEIDLength()
+        {
+            return (long)IntervalType;
+        }
+        public long ToEIDLength()
+        {
+            return GetIntervalEIDLength() * Length;
+        }
+        public override string ToString()
+        {
+            if (Length == 1)
+            {
+                switch (IntervalType)
+                {
+                    case (DateTimeIntervalType.Seconds):
+                        return "1 Second";
+                    case (DateTimeIntervalType.Minutes):
+                        return "1 Minute";
+                    case (DateTimeIntervalType.Hours):
+                        return "Hourly";
+                    case (DateTimeIntervalType.Days):
+                        return "Daily";
+                    case (DateTimeIntervalType.Weeks):
+                        return "Weekly";
+                    case (DateTimeIntervalType.Months):
+                        return "Monthly";
+                    case (DateTimeIntervalType.Years):
+                        return "Annually";
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+            else if (Length > 1)
+            {
+                switch (IntervalType)
+                {
+                    case (DateTimeIntervalType.Seconds):
+                        return Length.ToString() + " Seconds";
+                    case (DateTimeIntervalType.Minutes):
+                        return Length.ToString() + " Minutes";
+                    case (DateTimeIntervalType.Hours):
+                        return Length.ToString() + " Hours";
+                    case (DateTimeIntervalType.Days):
+                        return Length.ToString() + " Days";
+                    case (DateTimeIntervalType.Weeks):
+                        return Length.ToString() + " Weeks";
+                    case (DateTimeIntervalType.Months):
+                        return Length.ToString() + " Months";
+                    case (DateTimeIntervalType.Years):
+                        return Length.ToString() + " Years";
+                    default:
+                        throw new System.NotImplementedException();
+                }
+            }
+            else
+                throw new System.NotImplementedException();
+        }
     }
 }
 

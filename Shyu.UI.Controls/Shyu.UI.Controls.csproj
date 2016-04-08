@@ -31,6 +31,10 @@
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DigitalRune.Windows.Docking, Version=1.3.5.0, Culture=neutral, PublicKeyToken=83b2c390cd515404, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\DigitalRune.Windows.Docking.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -45,6 +49,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionsBox.cs" />
+    <Compile Include="Docking\DocForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Docking\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Docking\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="MenuStripEx.cs" />
     <Compile Include="OutputBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +76,7 @@
     <Compile Include="TabControlEx.cs" />
     <Compile Include="GetToolStripButton.cs" />
     <Compile Include="ToolStripEx.cs" />
+    <Compile Include="ToolStripPanelEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shyu.Core\Shyu.Core.csproj">
@@ -78,10 +92,14 @@
       <Name>Shyu.UI</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Docking\" />
-  </ItemGroup>
-  <ItemGroup>
+    <EmbeddedResource Include="Docking\DocForm.resx">
+      <DependentUpon>DocForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Docking\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
