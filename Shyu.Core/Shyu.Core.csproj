@@ -65,7 +65,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conversion\uConv.cs" />
-    <Compile Include="Conversion\uConv_Finance.cs" />
     <Compile Include="Conversion\uConv_Time.cs" />
     <Compile Include="Data\DataBase.cs" />
     <Compile Include="Data\DataTableEx.cs" />

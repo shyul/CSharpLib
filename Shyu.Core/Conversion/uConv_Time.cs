@@ -41,6 +41,48 @@ namespace Shyu.Core
             // Return the week of our adjusted day
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
+        public static bool IsFirstDayOfYear(long EID)
+        {
+            return IsFirstDayOfYear(uConv.EIDToTime(EID));
+        }
+        public static bool IsFirstDayOfYear(DateTime Date)
+        {
+            if (Date.Month == 1 && Date.Day == 1)
+                return true;
+            else return false;
+        }
+        public static bool IsLastDayOfYear(long EID)
+        {
+            return IsLastDayOfYear(uConv.EIDToTime(EID));
+        }
+        public static bool IsLastDayOfYear(DateTime Date)
+        {
+            if (Date.Month == 12 && Date.Day == 31)
+                return true;
+            else return false;
+        }
+        public static bool IsLastDayOfMonth(long EID)
+        {
+            return IsLastDayOfMonth(uConv.EIDToTime(EID));
+        }
+        public static bool IsLastDayOfMonth(DateTime Date)
+        {
+            if (((Date.Month == 1 || Date.Month == 3 || Date.Month == 5 || Date.Month == 7 || Date.Month == 8 || Date.Month == 10 || Date.Month == 12) && Date.Day == 31) ||
+                ((Date.Month == 4 || Date.Month == 6 || Date.Month == 9 || Date.Month == 11) && Date.Day == 30) ||
+                (!DateTime.IsLeapYear(Date.Year) && Date.Month == 2 && Date.Day == 28) ||
+                (DateTime.IsLeapYear(Date.Year) && Date.Month == 2 && Date.Day == 29))
+                return true;
+            else return false;
+        }
+        public static bool IsMonday(long EID)
+        {
+            return IsMonday(uConv.EIDToTime(EID));
+        }
+        public static bool IsMonday(DateTime Date)
+        {
+            if (Date.DayOfWeek == DayOfWeek.Monday) return true;
+            else return false;
+        }
     }
 
     public enum DateTimeIntervalType
@@ -53,28 +95,54 @@ namespace Shyu.Core
         Minutes = 60,
         Seconds = 1,
     }
-    public class Period
+    public class DateTimePeriodTicks
     {
-        public int Length = 1;
+        public DateTimeIntervalType Major = DateTimeIntervalType.Months;
+        public int MajorInterval = 1;
+        public DateTimeIntervalType Minor = DateTimeIntervalType.Weeks;
+        public int MinorInterval = 1;
+    }
+    public class DateTimePeriod
+    {
+        public int Interval = 1;
         public DateTimeIntervalType IntervalType = DateTimeIntervalType.Days;
 
-        public Period(int Length, DateTimeIntervalType IntervalType)
+        public DateTimePeriod(int Interval, DateTimeIntervalType IntervalType)
         {
-            this.Length = Length;
+            this.Interval = Interval;
             this.IntervalType = IntervalType;
         }
 
+        public DateTimePeriodTicks GetTicks(int PointCnt, int MinorRatio, int TicksCnt)
+        { 
+            DateTimePeriodTicks Ticks = new DateTimePeriodTicks();
+
+            Ticks.MinorInterval = uConv.Round(Interval * PointCnt / TicksCnt);
+            if (Ticks.MinorInterval < Interval) Ticks.MinorInterval = Interval;
+            Ticks.MajorInterval = MinorRatio * Ticks.MinorInterval;
+
+            switch (IntervalType)
+            {
+                case (DateTimeIntervalType.Years):
+                    break;
+                case (DateTimeIntervalType.Months):
+                    break;
+                default:
+                    break;
+            }
+            return Ticks;
+        }
         public long GetIntervalEIDLength()
         {
             return (long)IntervalType;
         }
         public long ToEIDLength()
         {
-            return GetIntervalEIDLength() * Length;
+            return GetIntervalEIDLength() * Interval;
         }
         public override string ToString()
         {
-            if (Length == 1)
+            if (Interval == 1)
             {
                 switch (IntervalType)
                 {
@@ -96,24 +164,24 @@ namespace Shyu.Core
                         throw new System.NotImplementedException();
                 }
             }
-            else if (Length > 1)
+            else if (Interval > 1)
             {
                 switch (IntervalType)
                 {
                     case (DateTimeIntervalType.Seconds):
-                        return Length.ToString() + " Seconds";
+                        return Interval.ToString() + " Seconds";
                     case (DateTimeIntervalType.Minutes):
-                        return Length.ToString() + " Minutes";
+                        return Interval.ToString() + " Minutes";
                     case (DateTimeIntervalType.Hours):
-                        return Length.ToString() + " Hours";
+                        return Interval.ToString() + " Hours";
                     case (DateTimeIntervalType.Days):
-                        return Length.ToString() + " Days";
+                        return Interval.ToString() + " Days";
                     case (DateTimeIntervalType.Weeks):
-                        return Length.ToString() + " Weeks";
+                        return Interval.ToString() + " Weeks";
                     case (DateTimeIntervalType.Months):
-                        return Length.ToString() + " Months";
+                        return Interval.ToString() + " Months";
                     case (DateTimeIntervalType.Years):
-                        return Length.ToString() + " Years";
+                        return Interval.ToString() + " Years";
                     default:
                         throw new System.NotImplementedException();
                 }

@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActionsBox.cs" />
+    <Compile Include="Chart.cs" />
     <Compile Include="Docking\DocForm.cs">
       <SubType>Form</SubType>
     </Compile>

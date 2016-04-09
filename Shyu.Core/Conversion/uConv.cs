@@ -47,6 +47,17 @@ namespace Shyu.Core
             return (int)Math.Round(input, MidpointRounding.AwayFromZero);
         }
 
+        public static DataRange GetRange(double[] input)
+        {
+            DataRange dr = new DataRange();
+            for (int i = 0; i < input.Length; i++)
+            {
+                dr.Maximum = Math.Max(input[i], dr.Maximum);
+                dr.Minimum = Math.Min(input[i], dr.Minimum);
+            }
+            return dr;
+        }
+
         public static int LoWord(IntPtr dWord)
         {
             return LoWord(dWord.ToInt32());
@@ -66,62 +77,34 @@ namespace Shyu.Core
             else
                 return (dWord >> 16) & 0xffff;
         }
+        public static UInt32 BinaryReverse(UInt32 input, int BitLength)
+        {
+            UInt32 result = 0;
+            for (int i = 0; i < BitLength; i++)
+            {
+                result = (result << 1) | (input & 1);
+                input >>= 1;
+            }
+            return result;
+        }
     }
 
     public class DataRange
     {
-        /*
-        public DataRange()
-        {
-            min = double.MaxValue;
-            max = double.MinValue;
-        }
-        public DataRange(double val_min, double val_max)
-        {
-            min = val_min;
-            max = val_max;
-        }
-        public double Maximum
-        {
-            get
-            {
-                return Math.Max(this.max, this.min);
-            }
-            set
-            {
-                this.max = Math.Max(this.max, Maximum);
-            }
-        }
-
-        public double Minimum
-        {
-            get
-            {
-                return Math.Min(this.max, this.min);
-            }
-            set
-            {
-                this.min = Math.Min(this.min, Minimum);
-            }
-        }
-        public void SetMaximum(double Value)
-        {
-            this.max = Value;
-        }
-        public void SetMinimum(double Value)
-        {
-            this.min = Value;
-        }
-
-        public double Range()
-        {
-            return Math.Abs(max - min);
-        }
-        
-        private double max = double.MinValue;
-        private double min = double.MaxValue;*/
         public double Maximum = double.MinValue;
         public double Minimum = double.MaxValue;
+
+        public DataRange() { }
+        public DataRange(double[] input)
+        {
+            Maximum = double.MinValue;
+            Minimum = double.MaxValue;
+            for (int i = 0; i < input.Length; i++)
+            {
+                Maximum = Math.Max(input[i], Maximum);
+                Minimum = Math.Min(input[i], Minimum);
+            }
+        }
         public double GetRange() { return Math.Abs(Maximum - Minimum); }
     }
 }

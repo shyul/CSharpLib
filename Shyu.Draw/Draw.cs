@@ -12,6 +12,25 @@ namespace Shyu.UI.Drawing
 {
     public static class uDraw
     {
+        public static int GetPixFromYvalue(bool IsLogScale, float MinValue_Pix, float MaxValue_Pix, double Minimum, double Maximum, double Value)
+        {
+            return uConv.Round(GetPixFromYvalueF(IsLogScale, MinValue_Pix, MaxValue_Pix, Minimum, Maximum, Value));
+        }
+        public static float GetPixFromYvalueF(bool IsLogScale, float MinValue_Pix, float MaxValue_Pix, double Minimum, double Maximum, double Value)
+        {
+            if (Minimum == Maximum)
+                return uConv.Round((MinValue_Pix + MaxValue_Pix) / 2);
+            else
+            {
+                double ratio = (Value - Minimum) / (Maximum - Minimum);
+                if (IsLogScale)
+                {
+                    ratio = Math.Log10(ratio * 9 + 1);
+                }
+                return (float)(MinValue_Pix + (double)(MaxValue_Pix - MinValue_Pix) * ratio);
+            }
+        }
+
         public static void Candlestick(Graphics g, Color EdgeColor, Color FillColor, 
             int EdgeWidth, float Width, float X, 
             float Close_PixF, float Open_PixF, float Low_PixF, float High_PixF)
