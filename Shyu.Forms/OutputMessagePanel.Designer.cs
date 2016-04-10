@@ -47,7 +47,7 @@
             this.Output.Font = new System.Drawing.Font("Courier New", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Output.Location = new System.Drawing.Point(0, 25);
             this.Output.Name = "Output";
-            this.Output.Size = new System.Drawing.Size(1034, 285);
+            this.Output.Size = new System.Drawing.Size(1034, 186);
             this.Output.TabIndex = 1;
             this.Output.Text = "";
             // 
@@ -55,11 +55,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1034, 310);
+            this.ClientSize = new System.Drawing.Size(1034, 211);
+            this.CloseButton = false;
             this.Controls.Add(this.Output);
             this.Controls.Add(this.Tools);
             this.DockAreas = ((DigitalRune.Windows.Docking.DockAreas)((DigitalRune.Windows.Docking.DockAreas.Float | DigitalRune.Windows.Docking.DockAreas.Bottom)));
             this.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.HideOnClose = true;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "OutputMessagePanel";
             this.TabText = "MessagePanel";
             this.Text = "MessagePanel";
@@ -71,7 +75,7 @@
 
         #endregion
 
-        private Controls.ToolStripEx Tools;
-        private Controls.OutputBox Output;
+        public Controls.ToolStripEx Tools;
+        public Controls.OutputBox Output;
     }
 }

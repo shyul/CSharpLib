@@ -69,12 +69,6 @@
     <Compile Include="ActionPanel.Designer.cs">
       <DependentUpon>ActionPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="ChartForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ChartForm.Designer.cs">
-      <DependentUpon>ChartForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="GridPanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -116,9 +110,6 @@
   <ItemGroup>
     <EmbeddedResource Include="ActionPanel.resx">
       <DependentUpon>ActionPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ChartForm.resx">
-      <DependentUpon>ChartForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GridPanel.resx">
       <DependentUpon>GridPanel.cs</DependentUpon>

@@ -70,7 +70,7 @@ namespace Shyu.UI.Controls
                 float Value_X = 0;
                 for (int i = 0; i < Data.Length; i++)
                 {
-                    DrawPts.Add(new PointF(Value_X, uDraw.GetPixFromYvalueF(false, Size.Height - 1, 0, dr.Maximum - 100, dr.Maximum, Data[i])));
+                    DrawPts.Add(new PointF(Value_X, uDraw.GetPixFromYvalueF(false, Size.Height - 1, 0, dr.Minimum, dr.Maximum, Data[i])));
                     Value_X += PointWidth;
                 }
                 if (DrawPts.Count > 1)
