@@ -25,6 +25,9 @@ namespace Shyu
         private const int WS_EX_LAYOUTRTL = 0x400000;
         private const int WS_EX_NOINHERITLAYOUT = 0x100000;
 
+        private const int EM_GET_RECT = 0xB2;
+        private const int EM_SET_RECT = 0xB3;
+
         /*
         [DllImport("user32.dll")]
         public static extern int SendMessage(IntPtr hWnd, Int32 wMsg, bool wParam, Int32 lParam);

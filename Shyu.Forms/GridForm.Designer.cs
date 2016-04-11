@@ -1,6 +1,6 @@
 ﻿namespace Shyu.UI.Forms
 {
-    partial class GridPanel
+    partial class GridForm
     {
         /// <summary>
         /// Required designer variable.
@@ -74,13 +74,7 @@
             this.ClientSize = new System.Drawing.Size(584, 461);
             this.Controls.Add(this.toolStripEx1);
             this.Controls.Add(this.Grid);
-            this.DockAreas = ((DigitalRune.Windows.Docking.DockAreas)((((((DigitalRune.Windows.Docking.DockAreas.Float | DigitalRune.Windows.Docking.DockAreas.Left)
-            | DigitalRune.Windows.Docking.DockAreas.Right)
-            | DigitalRune.Windows.Docking.DockAreas.Top)
-            | DigitalRune.Windows.Docking.DockAreas.Bottom)
-            | DigitalRune.Windows.Docking.DockAreas.Document)));
             this.Name = "GridPanel";
-            this.TabText = "GridPanel";
             this.Text = "GridPanel";
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.toolStripEx1.ResumeLayout(false);

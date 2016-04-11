@@ -12,17 +12,17 @@ namespace Shyu.Core
     {
         public static long TimeToEID(DateTime date)
         {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return Convert.ToInt64((date - epoch).TotalSeconds);
         }
         public static long TimeToEID(DateTime date, DateTimeKind TimeKind)
         {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, TimeKind);
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, TimeKind);
             return Convert.ToInt64((date - epoch).TotalSeconds);
         }
         public static DateTime EIDToTime(long EID)
         {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             return epoch.AddSeconds(EID);
         }
         // This presumes that weeks start with Monday.
@@ -39,7 +39,7 @@ namespace Shyu.Core
             }
 
             // Return the week of our adjusted day
-            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Sunday);
         }
         public static bool IsFirstDayOfYear(long EID)
         {

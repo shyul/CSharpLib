@@ -21,6 +21,11 @@ namespace Shyu.UI.Controls
 
         public OutputBox()
         {
+            BorderStyle = BorderStyle.None;
+            Font = new Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(0)));
+            BackColor = Color.White;
+            ReadOnly = true;
+            ScrollBars = RichTextBoxScrollBars.ForcedVertical;
             SizeChanged += new EventHandler(OutputText_SizeChanged);
             TextChanged += new EventHandler(OutputText_SizeChanged);
             OutputMessageWorker.WorkerReportsProgress = true;

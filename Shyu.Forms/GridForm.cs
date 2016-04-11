@@ -12,9 +12,9 @@ using DigitalRune.Windows.Docking;
 
 namespace Shyu.UI.Forms
 {
-    public partial class GridPanel : DockableForm
+    public partial class GridForm : DockableForm
     {
-        public GridPanel()
+        public GridForm()
         {
             InitializeComponent();
         }
