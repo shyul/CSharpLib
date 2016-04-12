@@ -164,6 +164,10 @@ namespace Shyu.Core
                         throw new System.NotImplementedException();
                 }
             }
+            else if (Interval == 3 && IntervalType == DateTimeIntervalType.Months)
+            {
+                return "Quarterly";
+            }
             else if (Interval > 1)
             {
                 switch (IntervalType)
