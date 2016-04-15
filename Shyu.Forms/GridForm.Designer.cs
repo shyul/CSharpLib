@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GridPanel));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GridForm));
             this.Grid = new System.Windows.Forms.DataGridView();
             this.toolStripEx1 = new Shyu.UI.Controls.ToolStripEx();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
@@ -67,14 +67,20 @@
             this.toolStripButton1.Text = "toolStripButton1";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
-            // GridPanel
+            // GridForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(584, 461);
-            this.Controls.Add(this.toolStripEx1);
             this.Controls.Add(this.Grid);
-            this.Name = "GridPanel";
+            this.Controls.Add(this.toolStripEx1);
+            this.DockAreas = ((DigitalRune.Windows.Docking.DockAreas)((((((DigitalRune.Windows.Docking.DockAreas.Float | DigitalRune.Windows.Docking.DockAreas.Left) 
+            | DigitalRune.Windows.Docking.DockAreas.Right) 
+            | DigitalRune.Windows.Docking.DockAreas.Top) 
+            | DigitalRune.Windows.Docking.DockAreas.Bottom) 
+            | DigitalRune.Windows.Docking.DockAreas.Document)));
+            this.Name = "GridForm";
+            this.TabText = "GridPanel";
             this.Text = "GridPanel";
             ((System.ComponentModel.ISupportInitialize)(this.Grid)).EndInit();
             this.toolStripEx1.ResumeLayout(false);

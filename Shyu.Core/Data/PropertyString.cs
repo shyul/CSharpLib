@@ -331,7 +331,52 @@ namespace Shyu.Core
                 }
                 return Fs;
             }
-            return new Font("Tahoma", 5f);
+            else return new Font("Tahoma", 5f);
+        }
+
+        public void SetTimePeriod(string ValueName, DateTimePeriod Value)
+        {
+            ValueName = CleanUp(ValueName);
+            string ValueToSet = Value.Interval.ToString() + "%30" + Value.IntervalType.ToString();
+            if (this.ContainsKey(ValueName)) this[ValueName] = ValueToSet;
+            else this.Add(ValueName, ValueToSet);
+        }
+        public DateTimePeriod GetDateTimePeriod(string ValueName)
+        {
+            ValueName = CleanUp(ValueName);
+            if (this.ContainsKey(ValueName))
+            {
+                string[] Sections = Regex.Split(CleanUp(this[ValueName]), "%30");
+                DateTimeIntervalType Fs = DateTimeIntervalType.Days;
+                switch (Sections[1])
+                {
+                    case ("Years"):
+                        Fs = DateTimeIntervalType.Years;
+                        break;
+                    case ("Months"):
+                        Fs = DateTimeIntervalType.Months;
+                        break;
+                    case ("Weeks"):
+                        Fs = DateTimeIntervalType.Weeks;
+                        break;
+                    case ("Days"):
+                        Fs = DateTimeIntervalType.Days;
+                        break;
+                    case ("Hours"):
+                        Fs = DateTimeIntervalType.Hours;
+                        break;
+                    case ("Minutes"):
+                        Fs = DateTimeIntervalType.Minutes;
+                        break;
+                    case ("Seconds"):
+                        Fs = DateTimeIntervalType.Seconds;
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+                return new DateTimePeriod(Convert.ToInt32(Sections[0]), Fs);
+            }
+            return new DateTimePeriod(1, DateTimeIntervalType.Days);
         }
 
         public void SetVar(string ValueName, object Value)
