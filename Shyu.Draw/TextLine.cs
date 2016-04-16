@@ -10,6 +10,15 @@ using Shyu.Core;
 
 namespace Shyu.UI.Drawing
 {
+    public class TextInfo
+    {
+        public string Text;
+        public Font Font = new Font("Tahoma", 7.5F, FontStyle.Bold);
+        public Color TextColor = SystemColors.InfoText;
+        public Color BackColor = SystemColors.Window;
+        public StringFormat Format = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+    }
+
     public class TextLine
     {
         public string Text = "QuickTag";
@@ -21,22 +30,22 @@ namespace Shyu.UI.Drawing
         public SizeF Size = new SizeF(0, 0);
         public float LineSpace = 0;
         public float OffsetY = 0;
-        public StringFormat strFormat = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
+        public StringFormat Format = new StringFormat() { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
 
         public void GetShape(Graphics g)
         {
-            Size = g.MeasureString(Text, Font, Location, strFormat);
+            Size = g.MeasureString(Text, Font, Location, Format);
         }
 
         public void Draw(Graphics g)
         {
-            g.DrawString(Text, Font, new SolidBrush(Color), Location, strFormat);
+            g.DrawString(Text, Font, new SolidBrush(Color), Location, Format);
         }
 
         public void DrawWithBg(Graphics g)
         {
             g.FillRectangle(new SolidBrush(BackColor), new RectangleF(new PointF(Location.X, Location.Y - Size.Height / 2 - 1), Size));
-            g.DrawString(Text, Font, new SolidBrush(Color), Location, strFormat);
+            g.DrawString(Text, Font, new SolidBrush(Color), Location, Format);
         }
 
     }

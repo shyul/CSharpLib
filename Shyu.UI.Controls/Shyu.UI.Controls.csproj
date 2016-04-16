@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="ActionsBox.cs" />
     <Compile Include="Chart.cs" />
+    <Compile Include="ConsoleMessage.cs" />
     <Compile Include="MenuStripEx.cs" />
     <Compile Include="OutputBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -84,7 +85,6 @@
       <Name>Shyu.UI</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -95,10 +95,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\OrderAplha.PNG" />
+    <None Include="Resources\OrderByAplha.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\OrderByCategory.PNG" />
+    <None Include="Resources\OrderByCategory.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\arrow-000.png" />
@@ -231,6 +231,30 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\control-stop-square.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Message_Done.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Message_Error.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Message_Info.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Message_Start.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Message_Stop.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Message_Warning.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Order_ByAplha.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Order_ByCategory.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -74,8 +74,7 @@
             this.tsBtnGridCategorized.Checked = true;
             this.tsBtnGridCategorized.CheckState = System.Windows.Forms.CheckState.Checked;
             this.tsBtnGridCategorized.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsBtnGridCategorized.Image = global::Shyu.UI.Controls.Properties.Resources.OrderByCategory;
-            this.tsBtnGridCategorized.ImageTransparentColor = System.Drawing.Color.Red;
+            this.tsBtnGridCategorized.Image = global::Shyu.UI.Controls.Properties.Resources.Order_ByCategory;
             this.tsBtnGridCategorized.Name = "tsBtnGridCategorized";
             this.tsBtnGridCategorized.Size = new System.Drawing.Size(24, 24);
             this.tsBtnGridCategorized.Text = "Sort Categorized";
@@ -85,8 +84,7 @@
             // 
             this.tsBtnGridAlphabetical.AutoSize = false;
             this.tsBtnGridAlphabetical.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsBtnGridAlphabetical.Image = global::Shyu.UI.Controls.Properties.Resources.OrderAplha;
-            this.tsBtnGridAlphabetical.ImageTransparentColor = System.Drawing.Color.Red;
+            this.tsBtnGridAlphabetical.Image = global::Shyu.UI.Controls.Properties.Resources.Order_ByAplha;
             this.tsBtnGridAlphabetical.Name = "tsBtnGridAlphabetical";
             this.tsBtnGridAlphabetical.Size = new System.Drawing.Size(24, 24);
             this.tsBtnGridAlphabetical.Text = "Sort Alphabetical";

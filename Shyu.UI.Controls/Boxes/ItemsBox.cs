@@ -10,9 +10,9 @@ using System.Windows.Forms;
 namespace Shyu.UI.Controls
 {
     [System.ComponentModel.DesignerCategory("code")]
-    public class ActionBox : ListView
+    public class ItemsBox : ListView
     {
-        public ActionBox()
+        public ItemsBox()
         {
             this.View = View.Details;
             /*

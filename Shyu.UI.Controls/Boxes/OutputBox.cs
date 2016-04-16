@@ -1,4 +1,5 @@
 ﻿using Shyu.Core;
+using Shyu.UI.Drawing;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +13,30 @@ using System.Windows.Forms;
 
 namespace Shyu.UI.Controls
 {
+    public enum ConsoleMessageType
+    {
+        Info = 0,
+        Start = 1,
+        Stop = 2,
+        Done = 3,
+        Warning = 4,
+        Error = 5,
+    }
+    public class ConsoleMessage
+    {
+        public string SourceName = string.Empty;
+        public TextInfo Info = new TextInfo();
+        public ConsoleMessageType MessageType = ConsoleMessageType.Info;
+        public int Code = -1;
+        public int DebugLevel = 0;
+    }
+
+    public class ConsoleMessageArgs : EventArgs
+    {
+        public ConsoleMessage cm = new ConsoleMessage();
+    }
+    public delegate void ConsoleMessageHandler(object sender, ConsoleMessageArgs e);
+
     [System.ComponentModel.DesignerCategory("code")]
     public class OutputBox : RichTextBox
     {

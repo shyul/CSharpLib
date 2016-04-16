@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.toolStripEx1 = new Shyu.UI.Controls.ToolStripEx();
-            this.actionBox1 = new Shyu.UI.Controls.ActionBox();
+            this.actionBox1 = new Shyu.UI.Controls.ItemsBox();
             this.TypeIcon = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Code = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Description = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -98,7 +98,7 @@
         #endregion
 
         private Controls.ToolStripEx toolStripEx1;
-        private Controls.ActionBox actionBox1;
+        private Controls.ItemsBox actionBox1;
         private System.Windows.Forms.ColumnHeader TypeIcon;
         private System.Windows.Forms.ColumnHeader Source;
         private System.Windows.Forms.ColumnHeader Description;

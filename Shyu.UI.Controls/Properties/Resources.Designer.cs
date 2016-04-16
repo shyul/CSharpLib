@@ -503,9 +503,9 @@ namespace Shyu.UI.Controls.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap OrderAplha {
+        internal static System.Drawing.Bitmap Message_Done {
             get {
-                object obj = ResourceManager.GetObject("OrderAplha", resourceCulture);
+                object obj = ResourceManager.GetObject("Message_Done", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -513,9 +513,69 @@ namespace Shyu.UI.Controls.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap OrderByCategory {
+        internal static System.Drawing.Bitmap Message_Error {
             get {
-                object obj = ResourceManager.GetObject("OrderByCategory", resourceCulture);
+                object obj = ResourceManager.GetObject("Message_Error", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Message_Info {
+            get {
+                object obj = ResourceManager.GetObject("Message_Info", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Message_Start {
+            get {
+                object obj = ResourceManager.GetObject("Message_Start", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Message_Stop {
+            get {
+                object obj = ResourceManager.GetObject("Message_Stop", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Message_Warning {
+            get {
+                object obj = ResourceManager.GetObject("Message_Warning", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Order_ByAplha {
+            get {
+                object obj = ResourceManager.GetObject("Order_ByAplha", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Order_ByCategory {
+            get {
+                object obj = ResourceManager.GetObject("Order_ByCategory", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
