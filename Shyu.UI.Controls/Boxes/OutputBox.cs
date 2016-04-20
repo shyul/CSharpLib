@@ -37,11 +37,15 @@ namespace Shyu.UI.Controls
     }
     public delegate void ConsoleMessageHandler(object sender, ConsoleMessageArgs e);
 
+    //public delegate void AppendMessageHandler(string EventMessage);
+
     [System.ComponentModel.DesignerCategory("code")]
     public class OutputBox : RichTextBox
     {
+        //public event AppendMessageHandler AppendMessageEvent; 
+
         public Queue<string> OutputMessage = new Queue<string>();
-        public BackgroundWorker OutputMessageWorker = new BackgroundWorker();
+        //public BackgroundWorker OutputMessageWorker = new BackgroundWorker();
         public bool StopOutputMessageWorker = false;
 
         public OutputBox()
@@ -53,12 +57,23 @@ namespace Shyu.UI.Controls
             ScrollBars = RichTextBoxScrollBars.ForcedVertical;
             SizeChanged += new EventHandler(OutputText_SizeChanged);
             TextChanged += new EventHandler(OutputText_SizeChanged);
+
+            //AppendMessageEvent += new AppendMessageHandler(AppendText);
+
+            //Task.Factory.StartNew(() => Output());
+
+            
+
+            /*
             OutputMessageWorker.WorkerReportsProgress = true;
             OutputMessageWorker.WorkerSupportsCancellation = true;
             OutputMessageWorker.DoWork += new DoWorkEventHandler(OutputMessageWorker_DoWork);
             OutputMessageWorker.ProgressChanged += new ProgressChangedEventHandler(OutputMessageWorker_ProgressChanged);
             OutputMessageWorker.RunWorkerAsync();
+            */
         }
+
+
         public void PrintInfo(string Text)
         {
             if (OutputMessage.Count < 100) OutputMessage.Enqueue(" " + Text + "\n");
@@ -72,6 +87,24 @@ namespace Shyu.UI.Controls
             SelectionStart = Text.Length;
             ScrollToCaret();
         }
+        private async Task Output()
+        {
+            while (!StopOutputMessageWorker)
+            {
+                if (OutputMessage.Count > 0)
+                {
+                    while (OutputMessage.Count > 0 && !StopOutputMessageWorker)
+                    {
+                        AppendText(OutputMessage.Dequeue());
+                    }
+                }
+                Thread.Sleep(50);
+            }
+        }
+
+
+
+        /*
         private void OutputMessageWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             while (!StopOutputMessageWorker)
@@ -87,6 +120,8 @@ namespace Shyu.UI.Controls
                 {
                     AppendText(OutputMessage.Dequeue());
                 }
-        }
+        }*/
     }
+
+
 }
