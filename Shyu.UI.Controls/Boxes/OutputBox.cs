@@ -57,10 +57,10 @@ namespace Shyu.UI.Controls
             ScrollBars = RichTextBoxScrollBars.ForcedVertical;
             SizeChanged += new EventHandler(OutputText_SizeChanged);
             TextChanged += new EventHandler(OutputText_SizeChanged);
-
+            
             //AppendMessageEvent += new AppendMessageHandler(AppendText);
 
-            //Task.Factory.StartNew(() => Output());
+            Task.Factory.StartNew(() => Output());
 
             
 
@@ -87,7 +87,8 @@ namespace Shyu.UI.Controls
             SelectionStart = Text.Length;
             ScrollToCaret();
         }
-        private async Task Output()
+
+        private void Output()
         {
             while (!StopOutputMessageWorker)
             {
@@ -95,14 +96,42 @@ namespace Shyu.UI.Controls
                 {
                     while (OutputMessage.Count > 0 && !StopOutputMessageWorker)
                     {
-                        AppendText(OutputMessage.Dequeue());
+                        Invoke((MethodInvoker)delegate { AppendText(OutputMessage.Dequeue()); });
                     }
                 }
                 Thread.Sleep(50);
             }
         }
 
+        /*
 
+        private delegate void SetControlPropertyThreadSafeDelegate(
+    Control control,
+    string propertyName,
+    object propertyValue);
+
+        public static void SetControlPropertyThreadSafe(
+            Control control,
+            string propertyName,
+            object propertyValue)
+        {
+            if (control.InvokeRequired)
+            {
+                control.Invoke(new SetControlPropertyThreadSafeDelegate
+                (SetControlPropertyThreadSafe),
+                new object[] { control, propertyName, propertyValue });
+            }
+            else
+            {
+                control.GetType().InvokeMember(
+                    propertyName,
+                    BindingFlags.SetProperty,
+                    null,
+                    control,
+                    new object[] { propertyValue });
+            }
+        }
+        */
 
         /*
         private void OutputMessageWorker_DoWork(object sender, DoWorkEventArgs e)
