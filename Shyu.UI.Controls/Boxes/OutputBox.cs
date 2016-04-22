@@ -30,22 +30,15 @@ namespace Shyu.UI.Controls
         public int Code = -1;
         public int DebugLevel = 0;
     }
-
     public class ConsoleMessageArgs : EventArgs
     {
         public ConsoleMessage cm = new ConsoleMessage();
     }
     public delegate void ConsoleMessageHandler(object sender, ConsoleMessageArgs e);
-
-    //public delegate void AppendMessageHandler(string EventMessage);
-
     [System.ComponentModel.DesignerCategory("code")]
     public class OutputBox : RichTextBox
     {
-        //public event AppendMessageHandler AppendMessageEvent; 
-
         public Queue<string> OutputMessage = new Queue<string>();
-        //public BackgroundWorker OutputMessageWorker = new BackgroundWorker();
         public bool StopOutputMessageWorker = false;
 
         public OutputBox()
@@ -57,23 +50,8 @@ namespace Shyu.UI.Controls
             ScrollBars = RichTextBoxScrollBars.ForcedVertical;
             SizeChanged += new EventHandler(OutputText_SizeChanged);
             TextChanged += new EventHandler(OutputText_SizeChanged);
-            
-            //AppendMessageEvent += new AppendMessageHandler(AppendText);
-
             Task.Factory.StartNew(() => Output());
-
-            
-
-            /*
-            OutputMessageWorker.WorkerReportsProgress = true;
-            OutputMessageWorker.WorkerSupportsCancellation = true;
-            OutputMessageWorker.DoWork += new DoWorkEventHandler(OutputMessageWorker_DoWork);
-            OutputMessageWorker.ProgressChanged += new ProgressChangedEventHandler(OutputMessageWorker_ProgressChanged);
-            OutputMessageWorker.RunWorkerAsync();
-            */
         }
-
-
         public void PrintInfo(string Text)
         {
             if (OutputMessage.Count < 100) OutputMessage.Enqueue(" " + Text + "\n");
@@ -87,7 +65,6 @@ namespace Shyu.UI.Controls
             SelectionStart = Text.Length;
             ScrollToCaret();
         }
-
         private void Output()
         {
             while (!StopOutputMessageWorker)
@@ -102,55 +79,5 @@ namespace Shyu.UI.Controls
                 Thread.Sleep(50);
             }
         }
-
-        /*
-
-        private delegate void SetControlPropertyThreadSafeDelegate(
-    Control control,
-    string propertyName,
-    object propertyValue);
-
-        public static void SetControlPropertyThreadSafe(
-            Control control,
-            string propertyName,
-            object propertyValue)
-        {
-            if (control.InvokeRequired)
-            {
-                control.Invoke(new SetControlPropertyThreadSafeDelegate
-                (SetControlPropertyThreadSafe),
-                new object[] { control, propertyName, propertyValue });
-            }
-            else
-            {
-                control.GetType().InvokeMember(
-                    propertyName,
-                    BindingFlags.SetProperty,
-                    null,
-                    control,
-                    new object[] { propertyValue });
-            }
-        }
-        */
-
-        /*
-        private void OutputMessageWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            while (!StopOutputMessageWorker)
-            {
-                if (OutputMessage.Count > 0) OutputMessageWorker.ReportProgress(1);
-                Thread.Sleep(50);
-            }
-        }
-        private void OutputMessageWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-            if (e.ProgressPercentage != 0)
-                while (OutputMessage.Count > 0 && !StopOutputMessageWorker)
-                {
-                    AppendText(OutputMessage.Dequeue());
-                }
-        }*/
     }
-
-
 }
