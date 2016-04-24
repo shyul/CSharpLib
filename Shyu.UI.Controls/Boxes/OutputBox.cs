@@ -73,7 +73,7 @@ namespace Shyu.UI.Controls
                 {
                     while (OutputMessage.Count > 0 && !StopOutputMessageWorker)
                     {
-                        Invoke((MethodInvoker)delegate { AppendText(OutputMessage.Dequeue()); });
+                        Invoke((MethodInvoker) delegate { AppendText(OutputMessage.Dequeue()); });
                     }
                 }
                 Thread.Sleep(50);
